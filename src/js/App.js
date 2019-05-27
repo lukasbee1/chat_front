@@ -1,23 +1,19 @@
 import React from 'react';
-import logo from '../logo.svg';
 import '../css/App.css';
+import './socket_server_client';
 
+const url = process.env.REACT_APP_GENERATED_GOOGLE_URL;
+
+console.log(url);
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <div
-          className="App-link"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Entry point
+      <div className="authContainer">
+        <div className="auth-google">
+          <a href={ url }>Login with Google</a>
+
         </div>
-      </header>
+      </div>
     </div>
   );
 }
