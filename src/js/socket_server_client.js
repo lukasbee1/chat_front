@@ -21,11 +21,11 @@ var client = new WebSocket("ws://localhost:8080");
         if (data.toString() === 'Will you connect to chat?[y/n]') {
 
         }
-    }
+    }asdfd
 
 
 
-    
+
 
     client.onclose = function () {
         console.log('Client socket disconnect. ');
