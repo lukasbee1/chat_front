@@ -18,7 +18,8 @@
     "eject": "react-scripts eject",
     "test:j": "jest --coverage",
     "lint": "eslint ./src",
-    "lint:f": "eslint ./src --fix"
+    "lint:f": "eslint ./src --fix",
+    "precommit": "lint-staged"
   },
   "husky": {
     "hooks": {
@@ -26,8 +27,8 @@
     }
   },
   "lint-staged": {
-    "*.js": [
-      "npm run lint:f",
+    "src/**/*.{js,jsx,json,scss,css}": [
+      "prettier --config .prettierrc --write",
       "git add"
     ]
   },
@@ -51,11 +52,18 @@
     ]
   },
   "devDependencies": {
+    
     "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^17.1.0",
     "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-prettier": "^4.3.0",
     "eslint-plugin-import": "^2.17.2",
-    "husky": "^2.2.0",
-    "lint-staged": "^8.1.6",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-react": "^7.13.0",
+    "husky": "^2.3.0",
+    "lint-staged": "^8.1.7",
+    "prettier": "^1.17.1",
     "typescript": "^3.4.5"
   }
 }

@@ -15,18 +15,18 @@ client.onopen = () => {
 //     });
 // });
 
-client.onmessage = (data) => {
+client.onmessage = data => {
   console.log(`Server return data: ${data}`);
 
-//   if (data.toString() === 'Will you connect to chat?[y/n]') {
-//   }
+  //   if (data.toString() === 'Will you connect to chat?[y/n]') {
+  //   }
 };
 
 client.onclose = () => {
   console.log('Client socket disconnect. ');
-  //process.exit();
+  // process.exit();
 };
 
-client.onerror = (err) => {
+client.onerror = err => {
   console.error(JSON.stringify(err));
 };

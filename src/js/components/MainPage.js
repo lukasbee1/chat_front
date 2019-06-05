@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import io from 'socket.io-client';
-import Chat from './Chat'
 import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
+import Chat from './Chat';
 
 // const url = process.env.REACT_APP_GENERATED_GOOGLE_URL;
 const client = io('http://localhost:8080');
@@ -16,13 +16,14 @@ class MainPage extends Component {
       info: '',
     };
   }
+
   componentDidMount() {
     client.on('connect', () => {
       console.log('client connected, listening...');
-      
     });
-    client.on('message', (data) => {
-      this.setState({ messages: this.state.messages.concat({ data }) })
+    client.on('message', data => {
+      const { mess } = this.state;
+      this.setState({ messages: mess.concat({ data }) });
     });
 
     client.on('clientsID', clientsID => {
@@ -30,44 +31,51 @@ class MainPage extends Component {
     });
 
     client.on('disconnect', () => {
+      const { cl } = this.state;
       console.log('Client socket disconnect. ');
-      this.state.clients.splice(client.id, 1);
+      cl.splice(client.id, 1);
       client.close();
     });
-    client.on('error', (err) => {
+    client.on('error', err => {
       console.error(JSON.stringify(err));
     });
   }
+
   handleSubmit = () => {
-    if (!(this.state.info === '')) {
-      client.emit('reply', this.state.info);
+    const { mess, info } = this.state;
+
+    if (!(info === '')) {
+      client.emit('reply', info);
       console.log('handle submit triggered');
-      const data = this.state.info;
-      //this.setState({ messages: this.state.messages.concat( data ) });
+      const data = info;
+      // this.setState({ messages: this.state.messages.concat( data ) });
       this.setState({ info: '' });
-      this.setState({ messages: this.state.messages.concat({ data }) })
+      this.setState({ messages: mess.concat({ data }) });
       console.log(this.state);
     }
-  }
-  handleKeyPress = (event) => {
+  };
+
+  handleKeyPress = event => {
     if (event.key === 'Enter') {
-      event.preventDefault()
+      event.preventDefault();
       this.handleSubmit();
     }
-  }
+  };
 
-  handleInputChange = (e) => {
+  handleInputChange = e => {
     this.setState({ info: e.target.value });
-  }
+  };
 
   render() {
+    const { mess, cl, info } = this.state;
+
     return (
       <Container maxWidth="lg">
-        <Chat details={this.state.messages} clients={this.state.clients} />
+        <Chat details={mess} clients={cl} />
 
         <TextField
           label="enter message"
-          value={this.state.info}
+          value={info}
           onChange={this.handleInputChange}
           onKeyPress={this.handleKeyPress}
           margin="normal"

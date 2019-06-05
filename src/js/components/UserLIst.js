@@ -9,11 +9,8 @@ class UserList extends React.Component {
   }
 
   render() {
-    return (
-      <div>
-        {this.state.users}
-      </div>
-    );
+    const { users } = this.state;
+    return <div>{users}</div>;
   }
 }
 

@@ -1,12 +1,9 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
-class Message extends Component {
+class Message extends PureComponent {
   render() {
-    return (
-      <div className="chat-message">
-        {this.props.details}
-      </div>
-    );
+    // eslint-disable-next-line react/destructuring-assignment
+    return <div className="chat-message">{this.props.details}</div>;
   }
 }
 

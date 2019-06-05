@@ -1,11 +1,15 @@
 import React from 'react';
 import Message from './Message';
 
-class Chat extends React.Component {
-
+class Chat extends React.PureComponent {
   render() {
-    const messageList = this.props.details.map(message => <Message key={message.id} details={message.data} />);
-    const clientList = this.props.clients.map(client => <Message key={client} details={client} />);
+    // eslint-disable-next-line react/prop-types
+    const messageList = this.props.details.map(message => (
+      <Message key={message.id} details={message.data} />
+    ));
+    const clientList = this.props.clients.map(client => (
+      <Message key={client} details={client} />
+    ));
     return (
       <div className="container">
         <div className="chat">
