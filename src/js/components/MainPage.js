@@ -22,8 +22,8 @@ class MainPage extends Component {
       console.log('client connected, listening...');
     });
     client.on('message', data => {
-      const { mess } = this.state;
-      this.setState({ messages: mess.concat({ data }) });
+      const { messages } = this.state;
+      this.setState({ messages: messages.concat({ data }) });
     });
 
     client.on('clientsID', clientsID => {
@@ -42,7 +42,7 @@ class MainPage extends Component {
   }
 
   handleSubmit = () => {
-    const { mess, info } = this.state;
+    const { messages, info } = this.state;
 
     if (!(info === '')) {
       client.emit('reply', info);
@@ -50,7 +50,7 @@ class MainPage extends Component {
       const data = info;
       // this.setState({ messages: this.state.messages.concat( data ) });
       this.setState({ info: '' });
-      this.setState({ messages: mess.concat({ data }) });
+      this.setState({ messages: messages.concat({ data }) });
       console.log(this.state);
     }
   };
@@ -67,11 +67,11 @@ class MainPage extends Component {
   };
 
   render() {
-    const { mess, cl, info } = this.state;
+    const { messages, clients, info } = this.state;
 
     return (
       <Container maxWidth="lg">
-        <Chat details={mess} clients={cl} />
+        <Chat details={messages} clients={clients} />
 
         <TextField
           label="enter message"

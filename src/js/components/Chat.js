@@ -3,7 +3,6 @@ import Message from './Message';
 
 class Chat extends React.PureComponent {
   render() {
-    // eslint-disable-next-line react/prop-types
     const messageList = this.props.details.map(message => (
       <Message key={message.id} details={message.data} />
     ));

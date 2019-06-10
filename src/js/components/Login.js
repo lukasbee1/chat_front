@@ -5,8 +5,6 @@ import TextField from '@material-ui/core/TextField';
 
 import { BrowserRouter as Link } from 'react-router-dom';
 
-const url = process.env.REACT_APP_GENERATED_GOOGLE_URL;
-
 class Login extends Component {
   constructor() {
     super();
@@ -27,7 +25,7 @@ class Login extends Component {
       window.gapi.auth2
         .init({
           // не забудьте указать ваш ключ в .env
-          client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+          client_id: process.env.REACT_APP_cl_ID,
         })
         .then(_onInit, _onError);
     });
@@ -39,16 +37,26 @@ class Login extends Component {
       // метод возвращает объект пользователя
       // где есть все необходимые нам поля
       const profile = googleUser.getBasicProfile();
-      console.log(`ID: ${profile.getId()}`); // не посылайте подобную информацию напрямую, на ваш сервер!
-      console.log(`Full Name: ${profile.getName()}`);
-      console.log(`Given Name: ${profile.getGivenName()}`);
-      console.log(`Family Name: ${profile.getFamilyName()}`);
-      console.log(`Image URL: ${profile.getImageUrl()}`);
-      console.log(`Email: ${profile.getEmail()}`);
+      // console.log(`ID: ${profile.getId()}`); // не посылайте подобную информацию напрямую, на ваш сервер!
+      // console.log(`Full Name: ${profile.getName()}`);
+      // console.log(`Given Name: ${profile.getGivenName()}`);
+      // console.log(`Family Name: ${profile.getFamilyName()}`);
+      // console.log(`Image URL: ${profile.getImageUrl()}`);
+      // console.log(`Email: ${profile.getEmail()}`);
 
       // токен
-      const { idToken } = googleUser.getAuthResponse();
-      console.log(`ID Token: ${idToken}`);
+      const { id_token } = googleUser.getAuthResponse();
+      // console.log(`ID Token: ${id_token}`);
+
+      fetch('http://localhost:8080/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id_token }),
+      })
+        .then(response => response.json())
+        .then(data => console.log(data));
     });
   };
 
@@ -86,6 +94,7 @@ class Login extends Component {
 
     return (
       <Container maxWidth="lg">
+        {/* <button onClick={this.signOut}>Log out</button> */}
         <div className="login-window">
           <TextField
             label="Login"
@@ -121,7 +130,7 @@ class Login extends Component {
             type="button"
             value="GOOGLE"
             className="login-window__btn"
-            onClick="handleSubmitRegister"
+            onClick={this.signIn}
           />
           <input
             type="button"
