@@ -1,21 +1,21 @@
+/* eslint-disable react/button-has-type */
 import React, { Component } from 'react';
 import io from 'socket.io-client';
-import Container from '@material-ui/core/Container';
-import TextField from '@material-ui/core/TextField';
+import { Route } from 'react-router-dom';
+import { connect } from 'react-redux';
+import DialogNotSelected from './messages/DialogNotSelected';
 import Chat from './Chat';
+import Contact from './contacts/Contact';
+import '../../css/MainPage.css';
+import '../../css/Chat.css';
 
-// const url = process.env.REACT_APP_GENERATED_GOOGLE_URL;
 const client = io('http://localhost:8080');
 
 class MainPage extends Component {
-  constructor() {
-    super();
-    this.state = {
-      messages: [],
-      clients: [],
-      info: '',
-    };
-  }
+  state = {
+    messages: [],
+    clients: [],
+  };
 
   componentDidMount() {
     client.on('connect', () => {
@@ -25,11 +25,9 @@ class MainPage extends Component {
       const { messages } = this.state;
       this.setState({ messages: messages.concat({ data }) });
     });
-
-    client.on('clientsID', clientsID => {
-      this.setState({ clients: [...clientsID] });
+    client.on('clientsUpdated', userLogins => {
+      this.setState({ clients: [...userLogins] });
     });
-
     client.on('disconnect', () => {
       const { cl } = this.state;
       console.log('Client socket disconnect. ');
@@ -41,48 +39,71 @@ class MainPage extends Component {
     });
   }
 
-  handleSubmit = () => {
-    const { messages, info } = this.state;
-
-    if (!(info === '')) {
-      client.emit('reply', info);
-      console.log('handle submit triggered');
-      const data = info;
-      // this.setState({ messages: this.state.messages.concat( data ) });
-      this.setState({ info: '' });
-      this.setState({ messages: messages.concat({ data }) });
-      console.log(this.state);
-    }
-  };
-
-  handleKeyPress = event => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      this.handleSubmit();
-    }
-  };
-
-  handleInputChange = e => {
-    this.setState({ info: e.target.value });
-  };
-
   render() {
-    const { messages, clients, info } = this.state;
+    console.log(this.props.user);
+    if (this.props.user.email === '') {
+      this.props.history.push('/');
+      return <h1>Error, you should to sign in</h1>;
+    }
+    let arrayOfChats;
+    if (this.props.chats) {
+      arrayOfChats = this.props.chats.map(chat => (
+        <Contact det={chat.id} chN={chat.name} key={chat.id} />
+      ));
+    }
 
     return (
-      <Container maxWidth="lg">
-        <Chat details={messages} clients={clients} />
-
-        <TextField
-          label="enter message"
-          value={info}
-          onChange={this.handleInputChange}
-          onKeyPress={this.handleKeyPress}
-          margin="normal"
-        />
-      </Container>
+      <div className="messanger">
+        <div className="messanger__sidepanel">
+          <div>
+            <div className="messanger__sidepanel-profile">
+              <img
+                id="profile-img"
+                src="http://emilcarlsson.se/assets/mikeross.png"
+                className="online"
+                alt=""
+              />
+              <div className="m-auto">{this.props.user.email}</div>
+              <i className="m-auto fa fa-chevron-down expand-button" />
+            </div>
+            <div className="messanger__contacts">{arrayOfChats}</div>
+          </div>
+          <div className="messanger__sidepanel-bottomBar">
+            <button className="messanger__sidepanel-bottomBar_addcontact">
+              <i className="fa fa-user-plus fa-fw" aria-hidden="true" />
+              <span>Add contact</span>
+            </button>
+            <button className="messanger__sidepanel-bottomBar_settings">
+              <i className="fa fa-cog fa-fw" aria-hidden="true" />
+              <span>Settings</span>
+            </button>
+          </div>
+        </div>
+        <div className="messanger__content">
+          <div className="messanger__content-profile">
+            <img
+              src="http://emilcarlsson.se/assets/harveyspecter.png"
+              alt=""
+              className="messanger__content-profile_img"
+            />
+            <div className="my-auto">Harvey Specter</div>
+          </div>
+          <Route exact path="/messanger" component={DialogNotSelected} />
+          <Route path="/messanger/:id" component={Chat} />
+        </div>
+      </div>
     );
   }
 }
 
-export default MainPage;
+const mapStateToProps = state => ({
+  socket: state.socket,
+  user: state.user,
+  chats: state.chats,
+  activeChatId: state.activeChatId,
+});
+
+export default connect(
+  mapStateToProps,
+  null
+)(MainPage);

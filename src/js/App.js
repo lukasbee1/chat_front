@@ -1,20 +1,28 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
+import { connect } from 'react-redux';
 import MainPage from './components/MainPage';
 import Login from './components/Login';
 import '../css/App.css';
 
 class App extends React.PureComponent {
   render() {
+    // console.log(this.props.user.chats);
     return (
-      <Router>
-        <div>
-          <Route exact path="/" component={Login} />
-          <Route path="/chat" component={MainPage} />
-        </div>
-      </Router>
+      <BrowserRouter>
+        <Route exact path="/" component={Login} />
+        <Route path="/messanger" component={MainPage} />
+      </BrowserRouter>
     );
   }
 }
 
-export default App;
+const mapStateToProps = state => ({
+  socket: state.socket,
+  user: state.user,
+});
+
+export default connect(
+  mapStateToProps,
+  null
+)(App);

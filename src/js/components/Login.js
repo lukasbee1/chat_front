@@ -1,18 +1,16 @@
+/* eslint-disable jsx-a11y/label-has-for */
+/* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable no-underscore-dangle */
 import React, { Component } from 'react';
-import Container from '@material-ui/core/Container';
-import TextField from '@material-ui/core/TextField';
-
-import { BrowserRouter as Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { reduxSignIn } from '../redux/actions';
+// import { BrowserRouter as Link } from 'react-router-dom';
+import '../../css/Login.css';
 
 class Login extends Component {
-  constructor() {
-    super();
-    this.state = {
-      login: '',
-      pass: '',
-    };
-  }
+  state = {
+    email: '',
+  };
 
   componentDidMount() {
     const _onInit = auth2 => {
@@ -24,40 +22,47 @@ class Login extends Component {
     window.gapi.load('auth2', () => {
       window.gapi.auth2
         .init({
-          // не забудьте указать ваш ключ в .env
           client_id: process.env.REACT_APP_cl_ID,
         })
         .then(_onInit, _onError);
     });
   }
 
-  signIn = () => {
-    const auth2 = window.gapi.auth2.getAuthInstance();
-    auth2.signIn().then(googleUser => {
-      // метод возвращает объект пользователя
-      // где есть все необходимые нам поля
-      const profile = googleUser.getBasicProfile();
-      // console.log(`ID: ${profile.getId()}`); // не посылайте подобную информацию напрямую, на ваш сервер!
-      // console.log(`Full Name: ${profile.getName()}`);
-      // console.log(`Given Name: ${profile.getGivenName()}`);
-      // console.log(`Family Name: ${profile.getFamilyName()}`);
-      // console.log(`Image URL: ${profile.getImageUrl()}`);
-      // console.log(`Email: ${profile.getEmail()}`);
-
-      // токен
-      const { id_token } = googleUser.getAuthResponse();
-      // console.log(`ID Token: ${id_token}`);
-
-      fetch('http://localhost:8080/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id_token }),
+  sendDataOnServer = obj => {
+    fetch('http://localhost:8080/login', {
+      method: 'POST',
+      body: JSON.stringify(obj),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(res => res.json())
+      .then(data => {
+        this.props.reduxSignIn(data);
       })
-        .then(response => response.json())
-        .then(data => console.log(data));
-    });
+      .then(() => {
+        this.props.history.push('/messanger');
+      });
+    // .then(() => {
+    //   this.props.socket.emit('id', this.props.user.id);
+    // });
+  };
+
+  googleSignIn = () => {
+    const auth2 = window.gapi.auth2.getAuthInstance();
+    auth2
+      .signIn()
+      .then(googleUser => {
+        const profile = googleUser.getBasicProfile();
+        const obj = {
+          type: 'email',
+          email: profile.getEmail(),
+        };
+        return obj;
+      })
+      .then(data => {
+        this.sendDataOnServer(data);
+      });
   };
 
   signOut = () => {
@@ -68,11 +73,13 @@ class Login extends Component {
   };
 
   handleSubmit = () => {
-    const { info } = this.state;
-
-    if (!(info === '')) {
-      console.log('handle submit triggered');
-      this.setState({ info: '' });
+    this.setState({ email: '' });
+    const obj = {
+      type: 'email',
+      email: this.state.email,
+    };
+    if (obj.email) {
+      this.sendDataOnServer(obj);
     }
   };
 
@@ -84,70 +91,99 @@ class Login extends Component {
   };
 
   handleInputChange = e => {
-    this.setState({ info: e.target.value });
+    this.setState({ email: e.target.value });
   };
 
-  // handleSubmitLogin = () => { };
-
   render() {
-    const { login, pass } = this.state;
+    const { email } = this.state;
 
     return (
-      <Container maxWidth="lg">
-        {/* <button onClick={this.signOut}>Log out</button> */}
-        <div className="login-window">
-          <TextField
-            label="Login"
-            value={login}
-            onChange={this.handleInputChange}
-            onKeyPress={this.handleKeyPress}
-            margin="normal"
-            className="login-window__input"
-          />
-          <TextField
-            label="Password"
-            value={pass}
-            onChange={this.handleInputChange}
-            onKeyPress={this.handleKeyPress}
-            margin="normal"
-            className="login-window__input"
-          />
-          <Link
-            to="/chat"
-            onClick="handleSubmitLogin"
-            className="login-window__btn"
-          >
-            Log in
-          </Link>
-          <input
-            type="button"
-            value="Register"
-            className="login-window__btn"
-            onClick="handleSubmitRegister"
-          />
-          <br />
-          <input
-            type="button"
-            value="GOOGLE"
-            className="login-window__btn"
-            onClick={this.signIn}
-          />
-          <input
-            type="button"
-            value="FACEBOOK"
-            className="login-window__btn"
-            onClick="handleSubmitRegister"
-          />
-          <input
-            type="button"
-            value="GITHUB"
-            className="login-window__btn"
-            onClick="handleSubmitRegister"
-          />
+      <>
+        <div className="container">
+          <div className="row">
+            <div className="col-sm-9 col-md-7 col-lg-5 mx-auto">
+              <div className="card card-signin my-5">
+                <div className="card-body">
+                  <h5 className="card-title text-center">Sign In</h5>
+                  <form className="form-signin">
+                    <div className="form-label-group">
+                      <input
+                        type="email"
+                        id="inputEmail"
+                        value={email}
+                        className="form-control"
+                        placeholder="Email address"
+                        required
+                        onChange={this.handleInputChange}
+                        onKeyPress={this.handleKeyPress}
+                      />
+                      <label htmlFor="inputEmail">Email address</label>
+                    </div>
+
+                    <div className="form-label-group">
+                      <input
+                        id="inputPassword"
+                        type="password"
+                        className="form-control"
+                        placeholder="Password"
+                        required
+                      />
+                      <label htmlFor="inputPassword">Password</label>
+                    </div>
+
+                    <div className="custom-control custom-checkbox mb-3">
+                      <input
+                        type="checkbox"
+                        className="custom-control-input"
+                        id="customCheck1"
+                      />
+                      <label
+                        className="custom-control-label"
+                        htmlFor="customCheck1"
+                      >
+                        Remember password
+                      </label>
+                    </div>
+                    <button
+                      className="btn btn-lg btn-primary btn-block text-uppercase"
+                      type="submit"
+                      onClick={this.handleSubmit}
+                    >
+                      Sign in
+                    </button>
+                    <hr className="my-4" />
+                    <button
+                      className="btn btn-lg btn-google btn-block text-uppercase"
+                      type="submit"
+                      onClick={this.googleSignIn}
+                    >
+                      <i className="fab fa-google mr-2">Sign in with Google</i>
+                    </button>
+                    <button
+                      className="btn btn-lg btn-facebook btn-block text-uppercase"
+                      type="submit"
+                    >
+                      <i className="fab fa-facebook-f mr-2">
+                        Sign in with Facebook
+                      </i>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </Container>
+      </>
     );
   }
 }
 
-export default Login;
+const mapStateToProps = state => ({
+  socket: state.socket,
+  user: state.user,
+});
+
+export default connect(
+  mapStateToProps,
+  { reduxSignIn }
+)(Login);
