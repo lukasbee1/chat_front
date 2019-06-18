@@ -4,7 +4,7 @@
 /* eslint-disable jsx-a11y/label-has-for */
 import React from 'react';
 import { connect } from 'react-redux';
-import { sendMessage } from '../redux/actions';
+import { sendMessage, initSocketConnection } from '../redux/actions';
 import DialogNotSelected from './messages/DialogNotSelected';
 
 import Message from './Message';
@@ -42,7 +42,7 @@ class Chat extends React.Component {
     if (!(inpData === '')) {
       this.props.sendMessage(inpData);
       this.setState({ inpData: '' });
-      // client.emit('reply', info);
+      this.props.client.emit('reply', inpData);
     }
   };
 
@@ -56,6 +56,7 @@ class Chat extends React.Component {
       return <>{DialogNotSelected}</>;
     }
     const { inpData } = this.state;
+    console.log(this.props.chats);
     const messageList = this.props.chats[
       this.props.activeChatId - 1
     ].messages.map(message => <Message key={message.id} details={message} />);
@@ -86,11 +87,13 @@ class Chat extends React.Component {
 }
 const mapStateToProps = state => ({
   chats: state.chats,
+
   activeChatId: state.activeChatId,
   messages: state.chats.messages,
+  client: state.client,
 });
 
 export default connect(
   mapStateToProps,
-  { sendMessage }
+  { sendMessage, initSocketConnection }
 )(Chat);

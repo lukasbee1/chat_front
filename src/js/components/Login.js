@@ -4,6 +4,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { reduxSignIn } from '../redux/actions';
+
 // import { BrowserRouter as Link } from 'react-router-dom';
 import '../../css/Login.css';
 
@@ -29,6 +30,7 @@ class Login extends Component {
   }
 
   sendDataOnServer = obj => {
+    localStorage.setItem('email', obj.email);
     fetch('http://localhost:8080/login', {
       method: 'POST',
       body: JSON.stringify(obj),
@@ -55,8 +57,10 @@ class Login extends Component {
       .then(googleUser => {
         const profile = googleUser.getBasicProfile();
         const obj = {
-          type: 'email',
+          type: 'profile',
           email: profile.getEmail(),
+          login: profile.getEmail(),
+          name: profile.getName(),
         };
         return obj;
       })
@@ -75,8 +79,10 @@ class Login extends Component {
   handleSubmit = () => {
     this.setState({ email: '' });
     const obj = {
-      type: 'email',
+      type: 'profile',
       email: this.state.email,
+      login: this.state.email,
+      name: this.state.email,
     };
     if (obj.email) {
       this.sendDataOnServer(obj);

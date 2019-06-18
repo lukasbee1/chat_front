@@ -7,7 +7,6 @@ import '../css/App.css';
 
 class App extends React.PureComponent {
   render() {
-    // console.log(this.props.user.chats);
     return (
       <BrowserRouter>
         <Route exact path="/" component={Login} />
@@ -18,7 +17,7 @@ class App extends React.PureComponent {
 }
 
 const mapStateToProps = state => ({
-  socket: state.socket,
+  client: state.socket,
   user: state.user,
 });
 

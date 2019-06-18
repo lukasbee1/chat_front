@@ -1,12 +1,25 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { setActiveChat } from '../../redux/actions';
+import { setActiveChat, saveMessages } from '../../redux/actions';
 
 class Contact extends PureComponent {
   setActiveId(id) {
+    console.log('setActiveId triggered');
+
     this.props.setActiveChat(id);
-    console.log();
+    fetch(`http://localhost:8080/api/messages/:chatId${id}`, {
+      method: 'GET',
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log('fetching!!!!!!!!!!!!!!!!');
+        console.log(data);
+        this.props.saveMessages(data);
+      })
+      .then(() => {
+        console.log('chat created');
+      });
   }
 
   render() {
@@ -42,5 +55,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { setActiveChat }
+  { setActiveChat, saveMessages }
 )(Contact);

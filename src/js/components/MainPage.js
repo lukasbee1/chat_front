@@ -3,6 +3,11 @@ import React, { Component } from 'react';
 import io from 'socket.io-client';
 import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
+import {
+  initSocketConnection,
+  sendMessage,
+  clientsUpdated,
+} from '../redux/actions';
 import DialogNotSelected from './messages/DialogNotSelected';
 import Chat from './Chat';
 import Contact from './contacts/Contact';
@@ -12,45 +17,64 @@ import '../../css/Chat.css';
 const client = io('http://localhost:8080');
 
 class MainPage extends Component {
-  state = {
-    messages: [],
-    clients: [],
-  };
-
   componentDidMount() {
+    this.props.initSocketConnection(client);
+
     client.on('connect', () => {
       console.log('client connected, listening...');
     });
-    client.on('message', data => {
-      const { messages } = this.state;
-      this.setState({ messages: messages.concat({ data }) });
+    client.on('clientsUpdated', usersInfo => {
+      this.props.clientsUpdated(usersInfo);
     });
-    client.on('clientsUpdated', userLogins => {
-      this.setState({ clients: [...userLogins] });
+    client.on('message', data => {
+      console.log(data);
+      this.props.sendMessage(data);
     });
     client.on('disconnect', () => {
-      const { cl } = this.state;
       console.log('Client socket disconnect. ');
-      cl.splice(client.id, 1);
-      client.close();
+      // cl.splice(this.props.client.id, 1);
+      // this.props.client.close();
     });
     client.on('error', err => {
       console.error(JSON.stringify(err));
     });
+
+    fetch('http://localhost:8080/api/clientsList', {
+      method: 'GET',
+    })
+      .then(res => res.json())
+      .then(rooms => {
+        this.props.clientsUpdated(rooms);
+        console.log(rooms);
+      });
   }
 
+  addChat = () => {
+    // fetch('http://localhost:8080/api/addChat', {
+    //   method: 'GET',
+    // })
+    //   .then(res => res.json())
+    //   .then(data => {
+    //     this.props.addChat(data);
+    //   })
+    //   .then(() => {
+    //     console.log('chat created');
+    //   });
+  };
+
   render() {
-    console.log(this.props.user);
-    if (this.props.user.email === '') {
+    // console.log(this.props.user);
+    if (this.props.user.email === '' || localStorage.getItem('email')) {
+      this.props.user.email = localStorage.getItem('email');
+    } else {
+      console.log('triggered');
       this.props.history.push('/');
       return <h1>Error, you should to sign in</h1>;
     }
-    let arrayOfChats;
-    if (this.props.chats) {
-      arrayOfChats = this.props.chats.map(chat => (
-        <Contact det={chat.id} chN={chat.name} key={chat.id} />
-      ));
-    }
+    console.log(this.props.chats);
+    const arrayOfChats = this.props.chats.map(chat => (
+      <Contact det={chat.id} chN={chat.name} key={chat.id} />
+    ));
 
     return (
       <div className="messanger">
@@ -71,11 +95,14 @@ class MainPage extends Component {
           <div className="messanger__sidepanel-bottomBar">
             <button className="messanger__sidepanel-bottomBar_addcontact">
               <i className="fa fa-user-plus fa-fw" aria-hidden="true" />
-              <span>Add contact</span>
+              <span> Add chat</span>
             </button>
-            <button className="messanger__sidepanel-bottomBar_settings">
+            <button
+              className="messanger__sidepanel-bottomBar_settings"
+              onClick={this.addChat}
+            >
               <i className="fa fa-cog fa-fw" aria-hidden="true" />
-              <span>Settings</span>
+              <span> Settings</span>
             </button>
           </div>
         </div>
@@ -97,7 +124,7 @@ class MainPage extends Component {
 }
 
 const mapStateToProps = state => ({
-  socket: state.socket,
+  client: state.client,
   user: state.user,
   chats: state.chats,
   activeChatId: state.activeChatId,
@@ -105,5 +132,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  null
+  { initSocketConnection, sendMessage, clientsUpdated }
 )(MainPage);
