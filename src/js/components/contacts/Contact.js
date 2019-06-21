@@ -5,20 +5,14 @@ import { setActiveChat, saveMessages } from '../../redux/actions';
 
 class Contact extends PureComponent {
   setActiveId(id) {
-    console.log('setActiveId triggered');
-
     this.props.setActiveChat(id);
-    fetch(`http://localhost:8080/api/messages/:chatId${id}`, {
+
+    fetch(`http://localhost:8080/api/messages/id${id}`, {
       method: 'GET',
     })
       .then(res => res.json())
       .then(data => {
-        console.log('fetching!!!!!!!!!!!!!!!!');
-        console.log(data);
         this.props.saveMessages(data);
-      })
-      .then(() => {
-        console.log('chat created');
       });
   }
 

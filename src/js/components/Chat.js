@@ -4,7 +4,11 @@
 /* eslint-disable jsx-a11y/label-has-for */
 import React from 'react';
 import { connect } from 'react-redux';
-import { sendMessage, initSocketConnection } from '../redux/actions';
+import {
+  sendMessage,
+  initSocketConnection,
+  saveMessages,
+} from '../redux/actions';
 import DialogNotSelected from './messages/DialogNotSelected';
 
 import Message from './Message';
@@ -18,10 +22,9 @@ class Chat extends React.Component {
       inpData: '',
     };
   }
-
-  componentDidMount() {
-    this.getMessages();
-  }
+  // componentDidMount() {
+  //   this.getMessages();
+  // }
 
   getMessages = () => {
     // fetch('/api/getList')
@@ -56,10 +59,12 @@ class Chat extends React.Component {
       return <>{DialogNotSelected}</>;
     }
     const { inpData } = this.state;
-    console.log(this.props.chats);
-    const messageList = this.props.chats[
-      this.props.activeChatId - 1
-    ].messages.map(message => <Message key={message.id} details={message} />);
+    let messageList = [];
+    if (this.props.chats[this.props.activeChatId - 1].messages) {
+      messageList = this.props.chats[this.props.activeChatId - 1].messages.map(
+        message => <Message key={message.id} details={message.tweet} />
+      );
+    }
     return (
       <div className="messanger__content-chat">
         <div className="messanger__content-messageBlock">{messageList}</div>
@@ -87,7 +92,6 @@ class Chat extends React.Component {
 }
 const mapStateToProps = state => ({
   chats: state.chats,
-
   activeChatId: state.activeChatId,
   messages: state.chats.messages,
   client: state.client,
@@ -95,5 +99,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { sendMessage, initSocketConnection }
+  { sendMessage, initSocketConnection, saveMessages }
 )(Chat);

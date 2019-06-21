@@ -45,7 +45,6 @@ class MainPage extends Component {
       .then(res => res.json())
       .then(rooms => {
         this.props.clientsUpdated(rooms);
-        console.log(rooms);
       });
   }
 
@@ -67,11 +66,9 @@ class MainPage extends Component {
     if (this.props.user.email === '' || localStorage.getItem('email')) {
       this.props.user.email = localStorage.getItem('email');
     } else {
-      console.log('triggered');
       this.props.history.push('/');
       return <h1>Error, you should to sign in</h1>;
     }
-    console.log(this.props.chats);
     const arrayOfChats = this.props.chats.map(chat => (
       <Contact det={chat.id} chN={chat.name} key={chat.id} />
     ));
