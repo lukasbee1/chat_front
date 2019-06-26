@@ -41,11 +41,17 @@ class Chat extends React.Component {
 
   sendMessage = () => {
     const { inpData } = this.state;
-
-    if (!(inpData === '')) {
-      this.props.sendMessage(inpData);
+    console.log(this.props.user.id);
+    if (inpData !== '') {
+      console.log(inpData);
+      this.props.sendMessage({ tweet: inpData });
+      this.props.client.emit(
+        'reply',
+        inpData,
+        this.props.user.id,
+        this.props.activeChatId
+      );
       this.setState({ inpData: '' });
-      this.props.client.emit('reply', inpData);
     }
   };
 
@@ -95,6 +101,7 @@ const mapStateToProps = state => ({
   activeChatId: state.activeChatId,
   messages: state.chats.messages,
   client: state.client,
+  user: state.user,
 });
 
 export default connect(

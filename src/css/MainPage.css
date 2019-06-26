@@ -12,7 +12,7 @@ img {
 .messanger {
   display: flex;
   justify-content: center;
-  min-height: 100vh;
+  height: 95vh;
   /* max-height: 720px; */
   background: rgb(61, 128, 128);
 }
@@ -22,7 +22,7 @@ img {
   min-width: 280px;
   max-width: 340px;
   width: 40%;
-  height: 100vh;
+  height: 95vh;
   background: #2c3e50;
   color: #f5f5f5;
   overflow: hidden;
@@ -90,7 +90,8 @@ img {
 }
 .messanger__content {
   background: #e6eaea;
-  min-width: 800px;
+  min-width: 450px;
+  width: 800px;
 }
 .messanger__content-profile {
   display: flex;
@@ -110,7 +111,7 @@ img {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 93vh;
+  min-height: 87.5vh;
 }
 .messanger__content-messageBlock {
   padding: 13px;

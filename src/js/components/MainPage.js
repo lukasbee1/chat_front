@@ -10,6 +10,7 @@ import {
 } from '../redux/actions';
 import DialogNotSelected from './messages/DialogNotSelected';
 import Chat from './Chat';
+import createRoom from './modals/createRoom';
 import Contact from './contacts/Contact';
 import '../../css/MainPage.css';
 import '../../css/Chat.css';
@@ -65,6 +66,7 @@ class MainPage extends Component {
     // console.log(this.props.user);
     if (this.props.user.email === '' || localStorage.getItem('email')) {
       this.props.user.email = localStorage.getItem('email');
+      // this.props.user.id = localStorage.getItem('id');
     } else {
       this.props.history.push('/');
       return <h1>Error, you should to sign in</h1>;
