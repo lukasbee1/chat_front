@@ -24,4 +24,5 @@ export const clientsUpdated = users => ({
 export const saveMessages = messages => ({
   type: 'SAVE_MESSAGES',
   payload: messages,
+  w,
 });
