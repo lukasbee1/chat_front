@@ -1,10 +1,11 @@
 const initialState = {
   client: null,
-  activeChatId: 1,
+  activeChatId: null,
   user: {
     name: '',
     email: '',
-    id: '',
+    uniqueId: '',
+    id: 99,
   },
   friends: [],
   blockedUsers: [],
@@ -30,7 +31,7 @@ export default function user(state = initialState, action) {
           if (chat.id === state.activeChatId) {
             const obj = chat;
             obj.messages = [...chat.messages, action.payload];
-            return chat;
+            return obj;
           }
           return chat;
         }),
@@ -41,8 +42,8 @@ export default function user(state = initialState, action) {
         chats: state.chats.map(chat => {
           if (chat.id === state.activeChatId) {
             const obj = chat;
-            obj.messages = [...chat.messages, ...action.payload];
-            return chat;
+            obj.messages = action.payload;
+            return obj;
           }
           return chat;
         }),
