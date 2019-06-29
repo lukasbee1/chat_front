@@ -1,6 +1,6 @@
 const initialState = {
   client: null,
-  activeChatId: null,
+  // activeChatId: null,
   user: {
     name: '',
     email: '',
@@ -42,9 +42,9 @@ export default function user(state = initialState, action) {
       return {
         ...state,
         chats: state.chats.map(chat => {
-          if (chat.id === state.activeChatId) {
+          if (chat.id === action.payload.id) {
             const obj = chat;
-            obj.messages = action.payload;
+            obj.messages = action.payload.messages;
             return obj;
           }
           return chat;

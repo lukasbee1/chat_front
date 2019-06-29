@@ -18,9 +18,9 @@ export const clientsUpdated = users => ({
   type: 'CLIENTS_UPDATED',
   payload: users,
 });
-export const saveMessages = messages => ({
+export const saveMessages = obj => ({
   type: 'SAVE_MESSAGES',
-  payload: messages,
+  payload: obj,
 });
 
 export const getUsers = () => dispatch => {
@@ -33,19 +33,23 @@ export const getUsers = () => dispatch => {
     });
 };
 
-export const setActiveChat = id => ({
-  type: 'SET_ACTIVECHAT',
-  payload: id,
-});
-
 export const getChat = id => dispatch => {
   fetch(`http://localhost:8080/api/messages/id${id}`, {
     method: 'GET',
   })
     .then(res => res.json())
-    .then(data => {
-      dispatch(saveMessages(data));
+    .then(messages => {
+      console.log(messages);
+      console.log(id);
+      dispatch(saveMessages({ messages, id }));
     });
+};
+export const setActiveChat = id => dispatch => {
+  dispatch(getChat(id));
+  return {
+    type: 'SET_ACTIVECHAT',
+    payload: id,
+  };
 };
 
 export const postLogin = obj => dispatch => {
