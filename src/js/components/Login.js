@@ -3,7 +3,7 @@
 /* eslint-disable no-underscore-dangle */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { reduxSignIn } from '../redux/actions';
+import { reduxSignIn, postLogin } from '../redux/actions';
 
 // import { BrowserRouter as Link } from 'react-router-dom';
 import '../../css/Login.css';
@@ -30,25 +30,9 @@ class Login extends Component {
   }
 
   sendDataOnServer = obj => {
-    localStorage.setItem('email', obj.email);
-    fetch('http://localhost:8080/login', {
-      method: 'POST',
-      body: JSON.stringify(obj),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(res => res.json())
-      .then(data => {
-        console.log(data);
-        this.props.reduxSignIn(data);
-      })
-      .then(() => {
-        this.props.history.push('/messanger');
-      });
-    // .then(() => {
-    //   this.props.socket.emit('id', this.props.user.id);
-    // });
+    // this.props.reduxSignIn(obj);
+    this.props.postLogin(obj);
+    // this.props.history.push('/messanger');
   };
 
   googleSignIn = () => {
@@ -103,7 +87,12 @@ class Login extends Component {
 
   render() {
     const { email } = this.state;
-
+    if (localStorage.getItem('uniqueId')) {
+      this.props.user.email = localStorage.getItem('email');
+      this.props.user.id = localStorage.getItem('id');
+      this.props.user.uniqueId = localStorage.getItem('uniqueId');
+      this.props.history.push('/messanger');
+    }
     return (
       <>
         <div className="container">
@@ -186,11 +175,10 @@ class Login extends Component {
 }
 
 const mapStateToProps = state => ({
-  socket: state.socket,
   user: state.user,
 });
 
 export default connect(
   mapStateToProps,
-  { reduxSignIn }
+  { reduxSignIn, postLogin }
 )(Login);

@@ -4,30 +4,34 @@
 /* eslint-disable jsx-a11y/label-has-for */
 import React from 'react';
 import { connect } from 'react-redux';
-import { getChat } from '../../redux/actions';
+import { withRouter } from 'react-router-dom';
+import { getChat, setActiveChat } from '../../redux/actions';
 import InputItem from './InputItem/InputItem';
-import DialogNotSelected from './MessageItem/DialogNotSelected';
+// import DialogNotSelected from './MessageItem/DialogNotSelected';
 
 import Message from './MessageItem/Message';
 
+const regexp = /[0-9]/g;
+
 class Chat extends React.Component {
-  componentDidMount() {
-    this.props.getChat(this.props.activeChatId);
+  componentDidMount() {}
+
+  componentWillUpdate() {
+    const { pathname } = this.props.location;
+    const id = pathname.toString().match(regexp)[0];
+    this.props.setActiveChat(id);
+    console.log(id);
+    this.props.getChat(id);
   }
 
-  getMessages = () => {
-    // fetch('/api/getList')
-    // .then(res => res.json())
-    // .then(list => console.log(list));
-  };
-
   render() {
-    if (this.props.activeChatId === null) {
-      this.props.history.push('/messanger');
-      return <>{DialogNotSelected}</>;
-    }
-    console.log(this.props.activeChatId);
+    // if (this.props.activeChatId === null) {
+    //   this.props.history.push('/messanger');
+    //   return <>{DialogNotSelected}</>;
+    // }
+
     let messageList = [];
+    console.log('!!!!!!!!!!!');
 
     if (this.props.chats[this.props.activeChatId - 1].messages) {
       messageList = this.props.chats[this.props.activeChatId - 1].messages.map(
@@ -60,7 +64,9 @@ const mapStateToProps = state => ({
   user: state.user,
 });
 
-export default connect(
-  mapStateToProps,
-  { getChat }
-)(Chat);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    { getChat, setActiveChat }
+  )(Chat)
+);

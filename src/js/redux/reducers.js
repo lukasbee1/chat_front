@@ -5,7 +5,7 @@ const initialState = {
     name: '',
     email: '',
     uniqueId: '',
-    id: 99,
+    id: null,
   },
   friends: [],
   blockedUsers: [],
@@ -29,8 +29,10 @@ export default function user(state = initialState, action) {
         ...state,
         chats: state.chats.map(chat => {
           if (chat.id === state.activeChatId) {
+            const { messages } = chat;
+
             const obj = chat;
-            obj.messages = [...chat.messages, action.payload];
+            obj.messages = [...messages, action.payload];
             return obj;
           }
           return chat;
@@ -58,11 +60,12 @@ export default function user(state = initialState, action) {
         ...state,
         client: action.payload,
       };
-    case 'SIGN_IN':
+    case 'SIGN_IN': {
       return {
         ...state,
         user: action.payload,
       };
+    }
     default:
       return state;
   }

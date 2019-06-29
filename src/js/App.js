@@ -1,17 +1,18 @@
 import React from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import MainPage from './components/MainPage';
 import Login from './components/Login';
 import '../css/App.css';
+import history from '../history';
 
 class App extends React.PureComponent {
   render() {
     return (
-      <BrowserRouter>
+      <Router history={history}>
         <Route exact path="/" component={Login} />
         <Route path="/messanger" component={MainPage} />
-      </BrowserRouter>
+      </Router>
     );
   }
 }

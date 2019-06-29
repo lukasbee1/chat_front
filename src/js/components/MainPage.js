@@ -16,6 +16,13 @@ import Chat from './chat/Chat';
 import '../../css/MainPage.css';
 import '../../css/Chat.css';
 
+// ///////////// you have to add "log out" button!!!!!!!!!!!!!!!!!!!!
+// ///////////// you have to add "log out" button!!!!!!!!!!!!!!!!!!!!
+// ///////////// you have to add "log out" button!!!!!!!!!!!!!!!!!!!!
+// ///////////// you have to add "log out" button!!!!!!!!!!!!!!!!!!!!
+// ///////////// you have to add "log out" button!!!!!!!!!!!!!!!!!!!!
+// ///////////// you have to add "log out" button!!!!!!!!!!!!!!!!!!!!
+
 class MainPage extends Component {
   componentDidMount() {
     const client = io('http://localhost:8080');
@@ -27,7 +34,7 @@ class MainPage extends Component {
     client.on('clientsUpdated', usersInfo => {
       this.props.clientsUpdated(usersInfo);
     });
-    client.on('message', data => {
+    client.on('reply', data => {
       console.log(data);
       this.props.sendMessage(data);
     });
@@ -42,10 +49,11 @@ class MainPage extends Component {
   }
 
   render() {
-    // console.log(this.props.user);
-    if (this.props.user.email === '' || localStorage.getItem('email')) {
+    console.log(this.props.user);
+    if (localStorage.getItem('uniqueId')) {
       this.props.user.email = localStorage.getItem('email');
-      // this.props.user.id = localStorage.getItem('id');
+      this.props.user.id = localStorage.getItem('id');
+      this.props.user.uniqueId = localStorage.getItem('uniqueId');
     } else {
       this.props.history.push('/');
       return <h1>Error, you should to sign in</h1>;

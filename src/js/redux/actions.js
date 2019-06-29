@@ -1,3 +1,5 @@
+import history from '../../history';
+
 export const initSocketConnection = socket => ({
   type: 'INIT_SOCKET_CONNECTION',
   payload: socket,
@@ -19,7 +21,6 @@ export const clientsUpdated = users => ({
 export const saveMessages = messages => ({
   type: 'SAVE_MESSAGES',
   payload: messages,
-  w,
 });
 
 export const getUsers = () => dispatch => {
@@ -44,5 +45,24 @@ export const getChat = id => dispatch => {
     .then(res => res.json())
     .then(data => {
       dispatch(saveMessages(data));
+    });
+};
+
+export const postLogin = obj => dispatch => {
+  fetch('http://localhost:8080/login', {
+    method: 'POST',
+    body: JSON.stringify(obj),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+      dispatch(reduxSignIn(data));
+      localStorage.setItem('email', data.email);
+      localStorage.setItem('id', data.id);
+      localStorage.setItem('uniqueId', data.uniqueId);
+      history.push('/messanger');
     });
 };
