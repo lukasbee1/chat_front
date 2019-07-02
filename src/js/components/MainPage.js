@@ -38,6 +38,7 @@ class MainPage extends Component {
       console.log(data);
       this.props.sendMessage(data);
     });
+
     client.on('disconnect', () => {
       console.log('Client socket disconnect. ');
       // cl.splice(this.props.client.id, 1);
