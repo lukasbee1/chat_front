@@ -5,9 +5,9 @@ export const initSocketConnection = socket => ({
   payload: socket,
 });
 
-export const sendMessage = text => ({
+export const sendMessage = message => ({
   type: 'SEND_MESSAGE',
-  payload: text,
+  payload: message,
 });
 
 export const reduxSignIn = user => ({
@@ -39,8 +39,6 @@ export const getChat = id => dispatch => {
   })
     .then(res => res.json())
     .then(messages => {
-      console.log(messages);
-      console.log(id);
       dispatch(saveMessages({ messages, id }));
     });
 };

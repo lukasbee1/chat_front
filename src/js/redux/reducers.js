@@ -9,7 +9,9 @@ const initialState = {
   },
   friends: [],
   blockedUsers: [],
-  chats: [],
+  // chats: [],
+  chats: {},
+  chatList: [],
 };
 
 export default function user(state = initialState, action) {
@@ -27,33 +29,27 @@ export default function user(state = initialState, action) {
     case 'SEND_MESSAGE':
       return {
         ...state,
-        chats: state.chats.map(chat => {
-          if (chat.id === state.activeChatId) {
-            const { messages } = chat;
-
-            const obj = chat;
-            obj.messages = [...messages, action.payload];
-            return obj;
-          }
-          return chat;
-        }),
+        chats: {
+          ...state.chats,
+          [action.payload.id]: [
+            ...state.chats[action.payload.id],
+            action.payload,
+          ],
+        },
       };
     case 'SAVE_MESSAGES':
+      console.log(action.payload);
       return {
         ...state,
-        chats: state.chats.map(chat => {
-          if (chat.id === action.payload.id) {
-            const obj = chat;
-            obj.messages = action.payload.messages;
-            return obj;
-          }
-          return chat;
-        }),
+        chats: {
+          ...state.chats,
+          [action.payload.id]: action.payload.messages,
+        },
       };
     case 'CLIENTS_UPDATED':
       return {
         ...state,
-        chats: action.payload,
+        chatList: action.payload,
       };
     case 'INIT_SOCKET_CONNECTION':
       return {

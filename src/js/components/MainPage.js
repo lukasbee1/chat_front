@@ -49,7 +49,6 @@ class MainPage extends Component {
   }
 
   render() {
-    console.log(this.props.user);
     if (localStorage.getItem('uniqueId')) {
       this.props.user.email = localStorage.getItem('email');
       this.props.user.id = localStorage.getItem('id');

@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { getChat, setActiveChat } from '../../redux/actions';
 import InputItem from './InputItem/InputItem';
-import DialogNotSelected from './MessageItem/DialogNotSelected';
+// import DialogNotSelected from './MessageItem/DialogNotSelected';
 
 import Message from './MessageItem/Message';
 
@@ -16,36 +16,47 @@ const regexp = /[0-9]/g;
 class Chat extends React.Component {
   constructor() {
     super();
-    this.messageList = [];
     this.state = {
       id: null,
+      currentMessages: [],
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { pathname } = this.props.location;
-    // eslint-disable-next-line prefer-destructuring
-    this.setState({ id: pathname.toString().match(regexp)[0] });
-
-    this.props.getChat(this.id);
+    this.setState({ id: +pathname.toString().match(regexp)[0] });
   }
 
-  conponentDidMount() {}
+  componentDidUpdate(prevProps) {
+    const { chats, location } = this.props;
+    if (prevProps.chats !== chats) {
+      this.getMess();
+    }
+    if (prevProps.location !== location) {
+      this.setId();
+    }
+  }
+
+  setId() {
+    const { pathname } = this.props.location;
+    this.setState({ id: +pathname.toString().match(regexp)[0] });
+    this.props.getChat(+pathname.toString().match(regexp)[0]);
+  }
+
+  getMess() {
+    const { chats } = this.props;
+    console.log(chats);
+    const { id } = this.state;
+    this.setState({ currentMessages: chats[id] });
+  }
 
   render() {
-    console.log(this.props.chats);
-    if (
-      this.props.chats[this.state.id - 1] &&
-      this.props.chats[this.state.id - 1].messages
-    ) {
-      this.messageList = this.props.chats[this.id - 1].messages.map(message => (
-        <Message key={message.id} details={message.tweet} />
-      ));
-    }
-    // else {
-    //   this.props.history.push('/messanger');
-    //   return <>{DialogNotSelected}</>;
-    // }
+    const { currentMessages } = this.state;
+    console.log(currentMessages);
+
+    const messageList = currentMessages.map(message => {
+      return <Message key={message.id} details={message.tweet} />;
+    });
 
     return (
       <>
@@ -58,10 +69,8 @@ class Chat extends React.Component {
           <div className="my-auto">Harvey Specter</div>
         </div>
         <div className="messanger__content-chat">
-          <div className="messanger__content-messageBlock">
-            {this.messageList}
-          </div>
-          <InputItem />
+          <div className="messanger__content-messageBlock">{messageList}</div>
+          <InputItem roomId={this.state.id} />
         </div>
       </>
     );

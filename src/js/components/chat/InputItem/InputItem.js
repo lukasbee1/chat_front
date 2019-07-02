@@ -5,10 +5,8 @@ import { connect } from 'react-redux';
 import { setActiveChat, sendMessage } from '../../../redux/actions';
 
 class InputItem extends Component {
-  constructor(name, id) {
+  constructor() {
     super();
-    this.name = name;
-    this.id = id;
     this.state = {
       inpData: '',
     };
@@ -16,15 +14,17 @@ class InputItem extends Component {
 
   sendMessage = () => {
     const { inpData } = this.state;
+    const { roomId } = this.props;
     console.log(this.props.user.id);
+    console.log(roomId);
     if (inpData !== '') {
       console.log(inpData);
-      this.props.sendMessage({ tweet: inpData });
+      this.props.sendMessage({ tweet: inpData, id: roomId });
       this.props.client.emit(
         'reply',
         inpData,
         this.props.user.id,
-        this.props.activeChatId
+        this.props.roomId
       );
       this.setState({ inpData: '' });
     }

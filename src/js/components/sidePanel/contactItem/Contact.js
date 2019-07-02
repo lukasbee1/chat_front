@@ -1,18 +1,14 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { setActiveChat } from '../../../redux/actions';
+import { getChat } from '../../../redux/actions';
 
-class Contact extends Component {
-  setActiveId = id => {
-    this.props.setActiveChat(id);
-  };
-
+class Contact extends PureComponent {
   render() {
     return (
       <Link
         to={`/messanger/id${this.props.det}`}
-        onClick={() => this.setActiveId(this.props.det)}
+        // onClick={() => this.setActiveId(this.props.det)}
         key={this.props.det}
         className="messanger__constacts-contact"
       >
@@ -36,10 +32,9 @@ const mapStateToProps = state => ({
   socket: state.socket,
   user: state.user,
   chats: state.chats,
-  activeChatId: state.activeChatId,
 });
 
 export default connect(
   mapStateToProps,
-  { setActiveChat }
+  { getChat }
 )(Contact);

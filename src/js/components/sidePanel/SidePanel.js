@@ -11,9 +11,10 @@ class SidePanel extends React.Component {
   }
 
   render() {
-    const arrayOfChats = this.props.chats.map(chat => (
+    const arrayOfChats = this.props.chatList.map(chat => (
       <Contact det={chat.id} chN={chat.name} key={chat.id} />
     ));
+
     return (
       <div className="messanger__sidepanel">
         <div>
@@ -49,7 +50,7 @@ class SidePanel extends React.Component {
 
 const mapStateToProps = state => ({
   user: state.user,
-  chats: state.chats,
+  chatList: state.chatList,
 });
 
 export default connect(
