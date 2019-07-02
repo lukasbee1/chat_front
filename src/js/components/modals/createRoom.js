@@ -1,56 +1,56 @@
-import React from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+// import React from 'react';
 
-class ModalExample extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      modal: false,
-    };
+// class ModalExample extends React.Component {
+//   constructor() {
+//     super();
 
-    this.toggle = this.toggle.bind(this);
-  }
+//     this.state = {
+//       modalIsOpen: true,
+//     };
 
-  toggle() {
-    this.setState(prevState => ({
-      modal: !prevState.modal,
-    }));
-  }
+//     this.openModal = this.openModal.bind(this);
+//     this.afterOpenModal = this.afterOpenModal.bind(this);
+//     this.closeModal = this.closeModal.bind(this);
+//   }
 
-  render() {
-    return (
-      <div>
-        sdfdsfsdfsdfdsfsdf
-        <Button color="danger" onClick={this.toggle}>
-          {this.props.buttonLabel}
-        </Button>
-        <Modal
-          isOpen={this.state.modal}
-          toggle={this.toggle}
-          className={this.props.className}
-        >
-          <ModalHeader toggle={this.toggle}>Modal title</ModalHeader>
-          <ModalBody>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
-          </ModalBody>
-          <ModalFooter>
-            <Button color="primary" onClick={this.toggle}>
-              Do Something
-            </Button>
-            <Button color="secondary" onClick={this.toggle}>
-              Cancel
-            </Button>
-          </ModalFooter>
-        </Modal>
-      </div>
-    );
-  }
-}
+//   openModal() {
+//     this.setState({ modalIsOpen: true });
+//   }
 
-export default ModalExample;
+//   afterOpenModal() {
+//     // references are now sync'd and can be accessed.
+//     this.subtitle.style.color = '#f00';
+//   }
+
+//   closeModal() {
+//     this.setState({ modalIsOpen: false });
+//   }
+
+//   render() {
+//     return (
+//       <div>
+//         <button onClick={this.openModal}>Open Modal</button>
+//         <Modal
+//           isOpen={this.state.modalIsOpen}
+//           onAfterOpen={this.afterOpenModal}
+//           onRequestClose={this.closeModal}
+//           style={customStyles}
+//           contentLabel="Example Modal"
+//         >
+//           <h2 ref={subtitle => (this.subtitle = subtitle)}>Hello</h2>
+//           <button onClick={this.closeModal}>close</button>
+//           <div>I am a modal</div>
+//           <form>
+//             <input />
+//             <button>tab navigation</button>
+//             <button>stays</button>
+//             <button>inside</button>
+//             <button>the modal</button>
+//           </form>
+//         </Modal>
+//       </div>
+//     );
+//   }
+// }
+
+// export default ModalExample;

@@ -3,6 +3,9 @@ import React, { Component } from 'react';
 import io from 'socket.io-client';
 import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+
+import createRoom from './modals/createRoom';
 import {
   initSocketConnection,
   sendMessage,
@@ -15,6 +18,17 @@ import Chat from './chat/Chat';
 // import createRoom from './modals/createRoom';
 import '../../css/MainPage.css';
 import '../../css/Chat.css';
+
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+};
 
 // ///////////// you have to add "log out" button!!!!!!!!!!!!!!!!!!!!
 // ///////////// you have to add "log out" button!!!!!!!!!!!!!!!!!!!!
