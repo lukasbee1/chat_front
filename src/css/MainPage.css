@@ -112,8 +112,12 @@ img {
   flex-direction: column;
   justify-content: space-between;
   min-height: 87.5vh;
+  max-height: 87.5vh;
+  overflow: auto;
 }
 .messanger__content-messageBlock {
+  overflow: auto;
+
   padding: 13px;
 }
 .messanger__content-messageBlock_message {

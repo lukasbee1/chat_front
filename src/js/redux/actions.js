@@ -42,13 +42,6 @@ export const getChat = id => dispatch => {
       dispatch(saveMessages({ messages, id }));
     });
 };
-export const setActiveChat = id => dispatch => {
-  dispatch(getChat(id));
-  return {
-    type: 'SET_ACTIVECHAT',
-    payload: id,
-  };
-};
 
 export const postLogin = obj => dispatch => {
   fetch('http://localhost:8080/login', {

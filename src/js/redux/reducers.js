@@ -38,7 +38,6 @@ export default function user(state = initialState, action) {
         },
       };
     case 'SAVE_MESSAGES':
-      console.log(action.payload);
       return {
         ...state,
         chats: {

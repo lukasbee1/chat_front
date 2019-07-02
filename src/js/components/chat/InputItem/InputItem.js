@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { setActiveChat, sendMessage } from '../../../redux/actions';
+import { sendMessage } from '../../../redux/actions';
 
 class InputItem extends Component {
   constructor() {
@@ -15,10 +15,7 @@ class InputItem extends Component {
   sendMessage = () => {
     const { inpData } = this.state;
     const { roomId } = this.props;
-    console.log(this.props.user.id);
-    console.log(roomId);
     if (inpData !== '') {
-      console.log(inpData);
       this.props.sendMessage({ tweet: inpData, id: roomId });
       this.props.client.emit(
         'reply',
@@ -69,10 +66,9 @@ const mapStateToProps = state => ({
   client: state.client,
   user: state.user,
   chats: state.chats,
-  activeChatId: state.activeChatId,
 });
 
 export default connect(
   mapStateToProps,
-  { setActiveChat, sendMessage }
+  { sendMessage }
 )(InputItem);
