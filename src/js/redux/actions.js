@@ -18,18 +18,32 @@ export const clientsUpdated = users => ({
   type: 'CLIENTS_UPDATED',
   payload: users,
 });
+export const chatsUpdated = chats => ({
+  type: 'CHATS_UPDATED',
+  payload: chats,
+});
 export const saveMessages = obj => ({
   type: 'SAVE_MESSAGES',
   payload: obj,
 });
 
-export const getUsers = () => dispatch => {
-  fetch('http://localhost:8080/api/clientsList', {
+export const getChats = () => dispatch => {
+  fetch('http://localhost:8080/api/chatsList', {
     method: 'GET',
   })
     .then(res => res.json())
     .then(rooms => {
-      dispatch(clientsUpdated(rooms));
+      dispatch(chatsUpdated(rooms));
+    });
+};
+
+export const getUsers = () => dispatch => {
+  fetch('http://localhost:8080/api/usersList', {
+    method: 'GET',
+  })
+    .then(res => res.json())
+    .then(users => {
+      dispatch(clientsUpdated(users));
     });
 };
 
@@ -58,6 +72,7 @@ export const postLogin = obj => dispatch => {
       localStorage.setItem('email', data.email);
       localStorage.setItem('id', data.id);
       localStorage.setItem('uniqueId', data.uniqueId);
+      localStorage.setItem('avatar', data.avatar);
       history.push('/messanger');
     });
 };

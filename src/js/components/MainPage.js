@@ -3,13 +3,11 @@ import React, { Component } from 'react';
 import io from 'socket.io-client';
 import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-
-import createRoom from './modals/createRoom';
 import {
   initSocketConnection,
   sendMessage,
   clientsUpdated,
+  chatsUpdated,
   getChat,
 } from '../redux/actions';
 import DialogNotSelected from './chat/MessageItem/DialogNotSelected';
@@ -18,17 +16,6 @@ import Chat from './chat/Chat';
 // import createRoom from './modals/createRoom';
 import '../../css/MainPage.css';
 import '../../css/Chat.css';
-
-const customStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-  },
-};
 
 // ///////////// you have to add "log out" button!!!!!!!!!!!!!!!!!!!!
 // ///////////// you have to add "log out" button!!!!!!!!!!!!!!!!!!!!
@@ -47,6 +34,9 @@ class MainPage extends Component {
     });
     client.on('clientsUpdated', usersInfo => {
       this.props.clientsUpdated(usersInfo);
+    });
+    client.on('chatsUpdated', chatsInfo => {
+      this.props.chatsUpdated(chatsInfo);
     });
     client.on('reply', data => {
       console.log(data);
@@ -68,6 +58,7 @@ class MainPage extends Component {
       this.props.user.email = localStorage.getItem('email');
       this.props.user.id = localStorage.getItem('id');
       this.props.user.uniqueId = localStorage.getItem('uniqueId');
+      this.props.user.avatar = localStorage.getItem('avatar');
     } else {
       this.props.history.push('/');
       return <h1>Error, you should to sign in</h1>;
@@ -89,10 +80,9 @@ const mapStateToProps = state => ({
   client: state.client,
   user: state.user,
   chats: state.chats,
-  activeChatId: state.activeChatId,
 });
 
 export default connect(
   mapStateToProps,
-  { initSocketConnection, sendMessage, clientsUpdated, getChat }
+  { initSocketConnection, sendMessage, clientsUpdated, chatsUpdated, getChat }
 )(MainPage);

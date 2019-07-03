@@ -46,6 +46,7 @@ class Login extends Component {
           email: profile.getEmail(),
           login: profile.getEmail(),
           name: profile.getName(),
+          avatar: profile.getImageUrl(),
         };
         return obj;
       })
@@ -91,6 +92,7 @@ class Login extends Component {
       this.props.user.email = localStorage.getItem('email');
       this.props.user.id = localStorage.getItem('id');
       this.props.user.uniqueId = localStorage.getItem('uniqueId');
+      this.props.user.avatar = localStorage.getItem('avatar');
       this.props.history.push('/messanger');
     }
     return (

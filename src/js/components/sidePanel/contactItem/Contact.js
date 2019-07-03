@@ -1,7 +1,5 @@
 import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { getChat } from '../../../redux/actions';
 
 class Contact extends PureComponent {
   render() {
@@ -14,7 +12,7 @@ class Contact extends PureComponent {
       >
         <div className="messanger__constacts-contact_avatar">
           <span className="contact-status online" />
-          <img src="http://emilcarlsson.se/assets/louislitt.png" alt="" />
+          <img src="http://emilcarlsson.se/assets/mikeross.png" alt="" />
         </div>
         <div className="messanger__constacts-contact_meta">
           <div className="messanger__constacts-contact_meta-link">
@@ -28,13 +26,5 @@ class Contact extends PureComponent {
     );
   }
 }
-const mapStateToProps = state => ({
-  socket: state.socket,
-  user: state.user,
-  chats: state.chats,
-});
 
-export default connect(
-  mapStateToProps,
-  { getChat }
-)(Contact);
+export default Contact;

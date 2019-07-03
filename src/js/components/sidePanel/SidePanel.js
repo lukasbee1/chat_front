@@ -3,6 +3,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
+  TabContent,
+  TabPane,
+  Nav,
+  NavItem,
+  NavLink,
   Button,
   Modal,
   ModalHeader,
@@ -11,7 +16,7 @@ import {
   ModalFooter,
 } from 'reactstrap';
 import Contact from './contactItem/Contact';
-import { getUsers } from '../../redux/actions';
+import { getUsers, getChats } from '../../redux/actions';
 
 class SidePanel extends React.Component {
   constructor() {
@@ -28,6 +33,7 @@ class SidePanel extends React.Component {
 
   componentDidMount() {
     this.props.getUsers();
+    this.props.getChats();
   }
 
   closeModal() {
@@ -39,14 +45,28 @@ class SidePanel extends React.Component {
     this.subtitle.style.color = '#f00';
   }
 
+  toggle(tab) {
+    if (this.state.activeTab !== tab) {
+      this.setState({
+        activeTab: tab,
+      });
+    }
+  }
+
   openModal() {
     console.log('tr');
     this.setState({ modalIsOpen: true });
   }
 
   render() {
-    const arrayOfChats = this.props.chatList.map(chat => (
+    console.log(this.props.chatsList);
+    console.log(this.props.usersList);
+    const arrayOfChats = this.props.chatsList.map(chat => (
       <Contact det={chat.id} chN={chat.name} key={chat.id} />
+    ));
+    const arrayOfUsers = this.props.usersList.map(user => (
+      // <Contact det={user.id} chN={user.name} key={user.id} />
+      <div key={user.id}>{user.name}</div>
     ));
 
     return (
@@ -55,14 +75,44 @@ class SidePanel extends React.Component {
           <div className="messanger__sidepanel-profile">
             <img
               id="profile-img"
-              src="http://emilcarlsson.se/assets/mikeross.png"
+              src={this.props.user.avatar}
               className="online"
               alt=""
             />
             <div className="m-auto">{this.props.user.email}</div>
             <i className="m-auto fa fa-chevron-down expand-button" />
           </div>
-          <div className="messanger__contacts">{arrayOfChats}</div>
+
+          <Nav tabs>
+            <NavItem>
+              <NavLink
+                onClick={() => {
+                  this.toggle('1');
+                  this.props.getUsers();
+                }}
+              >
+                Users
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink
+                onClick={() => {
+                  this.toggle('2');
+                  this.props.getChats();
+                }}
+              >
+                Chats
+              </NavLink>
+            </NavItem>
+          </Nav>
+          <TabContent activeTab={this.state.activeTab}>
+            <TabPane tabId="1">
+              <div className="messanger__contacts">{arrayOfUsers}</div>
+            </TabPane>
+            <TabPane tabId="2">
+              <div className="messanger__contacts">{arrayOfChats}</div>
+            </TabPane>
+          </TabContent>
         </div>
         <div className="messanger__sidepanel-bottomBar">
           <button
@@ -72,36 +122,36 @@ class SidePanel extends React.Component {
             <i className="fa fa-user-plus fa-fw" aria-hidden="true" />
             <span> Add chat</span>
           </button>
+          <Modal
+            isOpen={this.state.modalIsOpen}
+            onAfterOpen={this.afterOpenModal}
+            onRequestClose={this.closeModal}
+            contentLabel="Open modal"
+          >
+            <ModalHeader toggle={this.toggle}>Modal title</ModalHeader>
+            <ModalBody>
+              <form>
+                <input placeholder="enter chat name" />
+                <Input
+                  type="select"
+                  name="selectMulti"
+                  id="exampleSelectMulti"
+                  multiple
+                >
+                  this.props.
+                </Input>
+              </form>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" onClick={this.closeModal}>
+                Do Something
+              </Button>
+              <Button color="secondary" onClick={this.closeModal}>
+                Cancel
+              </Button>
+            </ModalFooter>
+          </Modal>
           <button className="messanger__sidepanel-bottomBar_settings">
-            <Modal
-              isOpen={this.state.modalIsOpen}
-              onAfterOpen={this.afterOpenModal}
-              onRequestClose={this.closeModal}
-              contentLabel="Open modal"
-            >
-              <ModalHeader toggle={this.toggle}>Modal title</ModalHeader>
-              <ModalBody>
-                <form>
-                  <input placeholder="enter chat name" />
-                  <Input
-                    type="select"
-                    name="selectMulti"
-                    id="exampleSelectMulti"
-                    multiple
-                  >
-                    this.props.
-                  </Input>
-                </form>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="primary" onClick={this.closeModal}>
-                  Do Something
-                </Button>
-                <Button color="secondary" onClick={this.closeModal}>
-                  Cancel
-                </Button>
-              </ModalFooter>
-            </Modal>
             <i className="fa fa-cog fa-fw" aria-hidden="true" />
             <span> Settings</span>
           </button>
@@ -113,10 +163,11 @@ class SidePanel extends React.Component {
 
 const mapStateToProps = state => ({
   user: state.user,
-  chatList: state.chatList,
+  chatsList: state.chatsList,
+  usersList: state.usersList,
 });
 
 export default connect(
   mapStateToProps,
-  { getUsers }
+  { getUsers, getChats }
 )(SidePanel);

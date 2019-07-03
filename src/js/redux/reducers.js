@@ -1,3 +1,5 @@
+import av from '../../img/download.jpeg';
+
 const initialState = {
   client: null,
   // activeChatId: null,
@@ -6,12 +8,14 @@ const initialState = {
     email: '',
     uniqueId: '',
     id: null,
+    avatar: av,
   },
   friends: [],
   blockedUsers: [],
   // chats: [],
   chats: {},
-  chatList: [],
+  chatsList: [],
+  usersList: [],
 };
 
 export default function user(state = initialState, action) {
@@ -20,11 +24,6 @@ export default function user(state = initialState, action) {
       return {
         ...state,
         chats: [...this.state.chats, action.payload],
-      };
-    case 'SET_ACTIVECHAT':
-      return {
-        ...state,
-        activeChatId: action.payload,
       };
     case 'SEND_MESSAGE':
       return {
@@ -48,7 +47,12 @@ export default function user(state = initialState, action) {
     case 'CLIENTS_UPDATED':
       return {
         ...state,
-        chatList: action.payload,
+        usersList: action.payload,
+      };
+    case 'CHATS_UPDATED':
+      return {
+        ...state,
+        chatsList: action.payload,
       };
     case 'INIT_SOCKET_CONNECTION':
       return {
