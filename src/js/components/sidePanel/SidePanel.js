@@ -32,6 +32,7 @@ class SidePanel extends React.Component {
   }
 
   componentDidMount() {
+    this.toggle('2');
     this.props.getUsers();
     this.props.getChats();
   }
@@ -54,13 +55,10 @@ class SidePanel extends React.Component {
   }
 
   openModal() {
-    console.log('tr');
     this.setState({ modalIsOpen: true });
   }
 
   render() {
-    console.log(this.props.chatsList);
-    console.log(this.props.usersList);
     const arrayOfChats = this.props.chatsList.map(chat => (
       <Contact det={chat.id} chN={chat.name} key={chat.id} />
     ));
@@ -126,20 +124,17 @@ class SidePanel extends React.Component {
             isOpen={this.state.modalIsOpen}
             onAfterOpen={this.afterOpenModal}
             onRequestClose={this.closeModal}
-            contentLabel="Open modal"
           >
             <ModalHeader toggle={this.toggle}>Modal title</ModalHeader>
             <ModalBody>
               <form>
                 <input placeholder="enter chat name" />
                 <Input
-                  type="select"
+                  type="radio"
                   name="selectMulti"
                   id="exampleSelectMulti"
                   multiple
-                >
-                  this.props.
-                </Input>
+                />
               </form>
             </ModalBody>
             <ModalFooter>

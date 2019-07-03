@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { sendMessage } from '../../../redux/actions';
+import av from '../../../../img/download.jpeg';
 
 class InputItem extends Component {
   constructor() {
@@ -15,8 +16,13 @@ class InputItem extends Component {
   sendMessage = () => {
     const { inpData } = this.state;
     const { roomId } = this.props;
+    const { avatar } = av;
     if (inpData !== '') {
-      this.props.sendMessage({ tweet: inpData, id: roomId });
+      this.props.sendMessage({
+        tweet: inpData,
+        id: roomId,
+        Sender: { avatar },
+      });
       this.props.client.emit(
         'reply',
         inpData,

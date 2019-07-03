@@ -53,7 +53,13 @@ class Chat extends React.Component {
   render() {
     const { currentMessages } = this.state;
     const messageList = currentMessages.map(message => {
-      return <Message key={message.id} details={message.tweet} />;
+      return (
+        <Message
+          key={message.id}
+          details={message.tweet}
+          sender={message.Sender}
+        />
+      );
     });
 
     return (

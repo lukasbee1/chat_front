@@ -6,7 +6,7 @@ class Message extends PureComponent {
     return (
       <div className="messanger__content-messageBlock_message">
         <img
-          src={this.props.user.avatar}
+          src={this.props.sender.avatar}
           className="messanger__content-messageBlock_message-img"
           alt="avatar"
         />

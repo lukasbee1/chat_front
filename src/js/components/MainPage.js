@@ -27,7 +27,6 @@ import '../../css/Chat.css';
 class MainPage extends Component {
   componentDidMount() {
     const client = io('http://localhost:8080');
-
     this.props.initSocketConnection(client);
     client.on('connect', () => {
       console.log('client connected, listening...');
@@ -38,9 +37,9 @@ class MainPage extends Component {
     client.on('chatsUpdated', chatsInfo => {
       this.props.chatsUpdated(chatsInfo);
     });
-    client.on('reply', data => {
+    client.on('message', (data, userId, roomId) => {
       console.log(data);
-      this.props.sendMessage(data);
+      this.props.sendMessage({ tweet: data, id: userId });
     });
 
     client.on('disconnect', () => {

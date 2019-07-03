@@ -26,6 +26,7 @@ export default function user(state = initialState, action) {
         chats: [...this.state.chats, action.payload],
       };
     case 'SEND_MESSAGE':
+      console.log(action.payload);
       return {
         ...state,
         chats: {
@@ -36,14 +37,24 @@ export default function user(state = initialState, action) {
           ],
         },
       };
-    case 'SAVE_MESSAGES':
+    case 'SAVE_MESSAGES': {
+      console.log(action.payload.messages);
+      const arr = [];
+      action.payload.messages.forEach(obj => {
+        if (obj.Sender.avatar === null || !obj.Sender.avatar) {
+          const newObj = obj;
+          newObj.Sender.avatar = av;
+          arr.push(newObj);
+        } else arr.push(obj);
+      });
       return {
         ...state,
         chats: {
           ...state.chats,
-          [action.payload.id]: action.payload.messages,
+          [action.payload.id]: arr,
         },
       };
+    }
     case 'CLIENTS_UPDATED':
       return {
         ...state,
@@ -60,6 +71,14 @@ export default function user(state = initialState, action) {
         client: action.payload,
       };
     case 'SIGN_IN': {
+      if (!action.payload.avatar) {
+        const obj = action.payload;
+        obj.avatar = av;
+        return {
+          ...state,
+          user: obj,
+        };
+      }
       return {
         ...state,
         user: action.payload,
