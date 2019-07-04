@@ -5,7 +5,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { getChat } from '../../redux/actions';
+import {
+  getChat,
+  initSocketConnection,
+  sendMessage,
+  setEmit,
+} from '../../redux/actions';
 import InputItem from './InputItem/InputItem';
 // import DialogNotSelected from './MessageItem/DialogNotSelected';
 
@@ -23,9 +28,7 @@ class Chat extends React.Component {
   }
 
   componentDidMount() {
-    const { pathname } = this.props.location;
-    this.setState({ id: +pathname.toString().match(regexp)[0] });
-    this.props.getChat(+pathname.toString().match(regexp)[0]);
+    this.setId();
   }
 
   componentDidUpdate(prevProps) {
@@ -40,8 +43,12 @@ class Chat extends React.Component {
 
   setId() {
     const { pathname } = this.props.location;
+    const { id } = this.state;
     this.setState({ id: +pathname.toString().match(regexp)[0] });
     this.props.getChat(+pathname.toString().match(regexp)[0]);
+
+    // cl.emit('activeChat', +pathname.toString().match(regexp)[0], id);
+    this.props.setEmit('activeChat', +pathname.toString().match(regexp)[0], id);
   }
 
   getMess() {
@@ -89,6 +96,6 @@ const mapStateToProps = state => ({
 export default withRouter(
   connect(
     mapStateToProps,
-    { getChat }
+    { setEmit, getChat, initSocketConnection, sendMessage }
   )(Chat)
 );

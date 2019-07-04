@@ -25,7 +25,7 @@ import '../../css/Chat.css';
 // ///////////// you have to add "log out" button!!!!!!!!!!!!!!!!!!!!
 
 class MainPage extends Component {
-  componentDidMount() {
+  componentWillMount() {
     const client = io('http://localhost:8080');
     this.props.initSocketConnection(client);
     client.on('connect', () => {
@@ -37,11 +37,10 @@ class MainPage extends Component {
     client.on('chatsUpdated', chatsInfo => {
       this.props.chatsUpdated(chatsInfo);
     });
-    // client.on('message', (data, userId, roomId) => {
-    //   console.log(data);
-    //   this.props.sendMessage({ tweet: data, id: userId });
-    // });
-
+    client.on('reply', (data, sender, roomId) => {
+      this.props.sendMessage({ tweet: data, id: roomId, Sender: sender });
+      // this.getMess();
+    });
     client.on('disconnect', () => {
       console.log('Client socket disconnect. ');
       // cl.splice(this.props.client.id, 1);
@@ -51,6 +50,9 @@ class MainPage extends Component {
       console.error(JSON.stringify(err));
     });
   }
+  // componentDidMount() {
+
+  // }
 
   render() {
     if (localStorage.getItem('uniqueId')) {

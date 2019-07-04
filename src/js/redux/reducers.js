@@ -70,6 +70,7 @@ export default function user(state = initialState, action) {
         ...state,
         client: action.payload,
       };
+
     case 'SIGN_IN': {
       if (!action.payload.avatar) {
         const obj = action.payload;

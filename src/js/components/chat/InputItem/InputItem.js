@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { sendMessage } from '../../../redux/actions';
+import { sendMessage, setEmit } from '../../../redux/actions';
 
 class InputItem extends Component {
   constructor() {
@@ -14,19 +14,15 @@ class InputItem extends Component {
 
   sendMessage = () => {
     const { inpData } = this.state;
-    const { roomId, user } = this.props;
+    const { roomId, user, client } = this.props;
     if (inpData !== '') {
-      this.props.sendMessage({
-        tweet: inpData,
-        id: roomId,
-        Sender: user,
-      });
-      this.props.client.emit(
-        'reply',
-        inpData,
-        this.props.user.id,
-        this.props.roomId
-      );
+      // this.props.sendMessage({
+      //   tweet: inpData,
+      //   id: roomId,
+      //   Sender: user,
+      // });
+      // this.props.client.emit('reply', inpData, user.id, roomId);
+      this.props.setEmit('reply', inpData, user, roomId);
       this.setState({ inpData: '' });
     }
   };
@@ -74,5 +70,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { sendMessage }
+  { sendMessage, setEmit }
 )(InputItem);

@@ -27,14 +27,19 @@ export const saveMessages = obj => ({
   payload: obj,
 });
 
+export const setEmit = (event, ...args) => (dispatch, getState) => {
+  const { client } = getState();
+  const sock = client;
+  sock.emit(event, ...args);
+  dispatch(initSocketConnection(sock));
+};
+
 export const getChats = id => dispatch => {
-  console.log('getChats');
   fetch(`http://localhost:8080/api/chatsList/userId${id}`, {
     method: 'GET',
   })
     .then(res => res.json())
     .then(rooms => {
-      console.log(rooms);
       dispatch(chatsUpdated(rooms));
     });
 };
