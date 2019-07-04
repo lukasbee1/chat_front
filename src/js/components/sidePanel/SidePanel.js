@@ -34,7 +34,7 @@ class SidePanel extends React.Component {
   componentDidMount() {
     this.toggle('2');
     this.props.getUsers();
-    this.props.getChats();
+    this.props.getChats(this.props.user.id);
   }
 
   closeModal() {
@@ -96,7 +96,7 @@ class SidePanel extends React.Component {
               <NavLink
                 onClick={() => {
                   this.toggle('2');
-                  this.props.getChats();
+                  this.props.getChats(this.props.user.id);
                 }}
               >
                 Chats

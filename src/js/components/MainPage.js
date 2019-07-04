@@ -37,10 +37,10 @@ class MainPage extends Component {
     client.on('chatsUpdated', chatsInfo => {
       this.props.chatsUpdated(chatsInfo);
     });
-    client.on('message', (data, userId, roomId) => {
-      console.log(data);
-      this.props.sendMessage({ tweet: data, id: userId });
-    });
+    // client.on('message', (data, userId, roomId) => {
+    //   console.log(data);
+    //   this.props.sendMessage({ tweet: data, id: userId });
+    // });
 
     client.on('disconnect', () => {
       console.log('Client socket disconnect. ');
