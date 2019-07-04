@@ -1,62 +1,30 @@
-/* eslint-disable react/button-has-type */
-
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-  TabContent,
-  TabPane,
-  Nav,
-  NavItem,
-  NavLink,
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  Input,
-  ModalFooter,
-} from 'reactstrap';
+import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
+import CreateRoom from '../modals/CreateRoom';
 import Contact from './contactItem/Contact';
 import { getUsers, getChats } from '../../redux/actions';
 
 class SidePanel extends React.Component {
   constructor() {
     super();
-
     this.state = {
-      modalIsOpen: false,
+      activeTab: '2',
     };
-
-    this.openModal = this.openModal.bind(this);
-    this.afterOpenModal = this.afterOpenModal.bind(this);
-    this.closeModal = this.closeModal.bind(this);
   }
 
   componentDidMount() {
-    this.toggle('2');
     this.props.getUsers();
     this.props.getChats(this.props.user.id);
   }
 
-  closeModal() {
-    this.setState({ modalIsOpen: false });
-  }
-
-  afterOpenModal() {
-    // references are now sync'd and can be accessed.
-    this.subtitle.style.color = '#f00';
-  }
-
-  toggle(tab) {
+  toggle = tab => {
     if (this.state.activeTab !== tab) {
       this.setState({
         activeTab: tab,
       });
     }
-  }
-
-  openModal() {
-    this.setState({ modalIsOpen: true });
-  }
+  };
 
   render() {
     const arrayOfChats = this.props.chatsList.map(chat => (
@@ -113,43 +81,7 @@ class SidePanel extends React.Component {
           </TabContent>
         </div>
         <div className="messanger__sidepanel-bottomBar">
-          <button
-            className="messanger__sidepanel-bottomBar_addcontact"
-            onClick={this.openModal}
-          >
-            <i className="fa fa-user-plus fa-fw" aria-hidden="true" />
-            <span> Add chat</span>
-          </button>
-          <Modal
-            isOpen={this.state.modalIsOpen}
-            onAfterOpen={this.afterOpenModal}
-            onRequestClose={this.closeModal}
-          >
-            <ModalHeader toggle={this.toggle}>Modal title</ModalHeader>
-            <ModalBody>
-              <form>
-                <input placeholder="enter chat name" />
-                <Input
-                  type="radio"
-                  name="selectMulti"
-                  id="exampleSelectMulti"
-                  multiple
-                />
-              </form>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="primary" onClick={this.closeModal}>
-                Do Something
-              </Button>
-              <Button color="secondary" onClick={this.closeModal}>
-                Cancel
-              </Button>
-            </ModalFooter>
-          </Modal>
-          <button className="messanger__sidepanel-bottomBar_settings">
-            <i className="fa fa-cog fa-fw" aria-hidden="true" />
-            <span> Settings</span>
-          </button>
+          <CreateRoom />
         </div>
       </div>
     );

@@ -14,14 +14,8 @@ class InputItem extends Component {
 
   sendMessage = () => {
     const { inpData } = this.state;
-    const { roomId, user, client } = this.props;
+    const { roomId, user } = this.props;
     if (inpData !== '') {
-      // this.props.sendMessage({
-      //   tweet: inpData,
-      //   id: roomId,
-      //   Sender: user,
-      // });
-      // this.props.client.emit('reply', inpData, user.id, roomId);
       this.props.setEmit('reply', inpData, user, roomId);
       this.setState({ inpData: '' });
     }

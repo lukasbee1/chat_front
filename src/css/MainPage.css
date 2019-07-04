@@ -167,3 +167,8 @@ img {
   opacity: 0.5;
   cursor: pointer;
 }
+.modalW {
+}
+.modal-usersList {
+  background: #2c3e50;
+}
