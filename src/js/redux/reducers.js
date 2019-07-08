@@ -12,8 +12,8 @@ const initialState = {
   },
   friends: [],
   blockedUsers: [],
-  // chats: [],
-  chats: {},
+  chats: [],
+  // chats: {},
   chatsList: [],
   usersList: [],
 };
@@ -26,7 +26,7 @@ export default function user(state = initialState, action) {
         chats: [...this.state.chats, action.payload],
       };
     case 'SEND_MESSAGE':
-      console.log(action.payload);
+      // console.log(action.payload);
       return {
         ...state,
         chats: {
@@ -38,10 +38,10 @@ export default function user(state = initialState, action) {
         },
       };
     case 'SAVE_MESSAGES': {
-      console.log(action.payload.messages);
+      // console.log(action.payload.messages);
       const arr = [];
       action.payload.messages.forEach(obj => {
-        if (obj.Sender.avatar === null || !obj.Sender.avatar) {
+        if (!obj.Sender.avatar) {
           const newObj = obj;
           newObj.Sender.avatar = av;
           arr.push(newObj);

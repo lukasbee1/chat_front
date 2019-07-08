@@ -54,6 +54,7 @@ class SidePanel extends React.Component {
               <NavLink
                 onClick={() => {
                   this.toggle('1');
+                  console.log('tr');
                   this.props.getUsers();
                 }}
               >

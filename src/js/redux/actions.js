@@ -10,6 +10,11 @@ export const sendMessage = message => ({
   payload: message,
 });
 
+export const createChat = chat => ({
+  type: 'CREATE_CHAT',
+  payload: chat,
+});
+
 export const reduxSignIn = user => ({
   type: 'SIGN_IN',
   payload: user,
@@ -61,6 +66,25 @@ export const getChat = id => dispatch => {
     .then(res => res.json())
     .then(messages => {
       dispatch(saveMessages({ messages, id }));
+    });
+};
+
+export const postCreateChat = obj => dispatch => {
+  fetch('http://localhost:8080/createChat', {
+    method: 'POST',
+    body: JSON.stringify(obj),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+      console.log('Chat created!');
+      dispatch(createChat(data));
+    })
+    .catch(error => {
+      console.log('error', error);
     });
 };
 

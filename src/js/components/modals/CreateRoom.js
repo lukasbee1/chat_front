@@ -1,23 +1,24 @@
 /* eslint-disable react/button-has-type */
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  Input,
-  ModalFooter,
-} from 'reactstrap';
-import { getUsers, getChats } from '../../redux/actions';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { getUsers, getChats, postCreateChat } from '../../redux/actions';
 
 class CreateRoom extends React.Component {
   constructor() {
     super();
     this.state = {
       modalIsOpen: false,
+      selectedUsers: [],
+      name: '',
     };
   }
+
+  selectUser = id => {
+    const { selectedUsers } = this.state;
+    this.setState({ selectedUsers: [...selectedUsers, id] });
+    console.log('selected');
+  };
 
   closeModal = () => {
     this.setState({ modalIsOpen: false });
@@ -27,12 +28,31 @@ class CreateRoom extends React.Component {
     this.setState({ modalIsOpen: true });
   };
 
+  createChat = () => {
+    const { name, selectedUsers } = this.state;
+    const obj = {
+      name,
+      usersId: selectedUsers,
+    };
+    this.props.postCreateChat(obj);
+    this.props.getChats(this.props.user.id);
+    this.closeModal();
+  };
+
+  handleInputChange = e => {
+    this.setState({ name: e.target.value });
+  };
+
   render() {
     const listComp = this.props.usersList.map(user => (
-      <div key={user.id} className="messanger__constacts-contact">
+      <button
+        onClick={() => this.selectUser(user.id)}
+        key={user.id}
+        className="modal-usersList"
+      >
         <img src={user.avatar} alt="ava" />
         <div>{user.name}</div>
-      </div>
+      </button>
     ));
     return (
       <>
@@ -51,12 +71,18 @@ class CreateRoom extends React.Component {
           <ModalHeader>Modal title</ModalHeader>
           <ModalBody>
             <form>
-              <input placeholder="enter chat name" />
+              <input
+                onChange={this.handleInputChange}
+                placeholder="enter chat name"
+              />
             </form>
             <div className="modal-usersList">{listComp}</div>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.closeModal}>
+            <Button
+              color="primary"
+              onClick={() => this.createChat(this.state.selectedUsers)}
+            >
               Create
             </Button>
             <Button color="secondary" onClick={this.closeModal}>
@@ -81,5 +107,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getUsers, getChats }
+  { getUsers, getChats, postCreateChat }
 )(CreateRoom);
