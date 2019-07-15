@@ -1,21 +1,12 @@
 /* eslint-disable react/button-has-type */
 import React, { Component } from 'react';
-import io from 'socket.io-client';
 import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import {
-  initSocketConnection,
-  sendMessage,
-  clientsUpdated,
-  chatsUpdated,
-  getChat,
-} from '../redux/actions';
+import { createSocket } from '../redux/actions';
 import DialogNotSelected from './chat/MessageItem/DialogNotSelected';
 import SidePanel from './sidePanel/SidePanel';
 import Chat from './chat/Chat';
-// import createRoom from './modals/createRoom';
 import '../../css/MainPage.css';
-import '../../css/Chat.css';
 
 // ///////////// you have to add "log out" button!!!!!!!!!!!!!!!!!!!!
 // ///////////// you have to add "log out" button!!!!!!!!!!!!!!!!!!!!
@@ -25,34 +16,9 @@ import '../../css/Chat.css';
 // ///////////// you have to add "log out" button!!!!!!!!!!!!!!!!!!!!
 
 class MainPage extends Component {
-  componentWillMount() {
-    const client = io('http://localhost:8080');
-    this.props.initSocketConnection(client);
-    client.on('connect', () => {
-      console.log('client connected, listening...');
-    });
-    client.on('clientsUpdated', usersInfo => {
-      this.props.clientsUpdated(usersInfo);
-    });
-    client.on('chatsUpdated', chatsInfo => {
-      this.props.chatsUpdated(chatsInfo);
-    });
-    client.on('reply', (data, sender, roomId) => {
-      this.props.sendMessage({ tweet: data, id: roomId, Sender: sender });
-      // this.getMess();
-    });
-    client.on('disconnect', () => {
-      console.log('Client socket disconnect. ');
-      // cl.splice(this.props.client.id, 1);
-      // this.props.client.close();
-    });
-    client.on('error', err => {
-      console.error(JSON.stringify(err));
-    });
+  componentDidMount() {
+    this.props.createSocket(this.props.user.uniqueId);
   }
-  // componentDidMount() {
-
-  // }
 
   render() {
     if (localStorage.getItem('uniqueId')) {
@@ -80,10 +46,9 @@ class MainPage extends Component {
 const mapStateToProps = state => ({
   client: state.client,
   user: state.user,
-  chats: state.chats,
 });
 
 export default connect(
   mapStateToProps,
-  { initSocketConnection, sendMessage, clientsUpdated, chatsUpdated, getChat }
+  { createSocket }
 )(MainPage);

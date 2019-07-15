@@ -1,19 +1,17 @@
-import av from '../../img/download.jpeg';
-
 const initialState = {
   client: null,
-  // activeChatId: null,
+  activeId: null,
   user: {
     name: '',
     email: '',
     uniqueId: '',
     id: null,
-    avatar: av,
+    avatar: '',
   },
   friends: [],
   blockedUsers: [],
-  chats: [],
-  // chats: {},
+  // chats: [],
+  chats: {},
   chatsList: [],
   usersList: [],
 };
@@ -23,10 +21,26 @@ export default function user(state = initialState, action) {
     case 'CREATE_CHAT':
       return {
         ...state,
-        chats: [...this.state.chats, action.payload],
+        // chats: [...this.state.chats, action.payload],
+        // chats: {
+        //   ...state.chats,
+        //   [action.payload.id]: action.payload.users,
+        // }
+        chatsList: [...state.chatsList, action.payload],
+        // chats: {
+        //   ...state.chats,
+        //   [action.payload.id]: [
+        //     ...state.chats[action.payload.id],
+        //     action.payload,
+        //   ],
+        // },
+      };
+    case 'SET_ACTIVE_ID':
+      return {
+        ...state,
+        activeId: action.payload,
       };
     case 'SEND_MESSAGE':
-      // console.log(action.payload);
       return {
         ...state,
         chats: {
@@ -38,20 +52,11 @@ export default function user(state = initialState, action) {
         },
       };
     case 'SAVE_MESSAGES': {
-      // console.log(action.payload.messages);
-      const arr = [];
-      action.payload.messages.forEach(obj => {
-        if (!obj.Sender.avatar) {
-          const newObj = obj;
-          newObj.Sender.avatar = av;
-          arr.push(newObj);
-        } else arr.push(obj);
-      });
       return {
         ...state,
         chats: {
           ...state.chats,
-          [action.payload.id]: arr,
+          [action.payload.id]: action.payload.messages,
         },
       };
     }
@@ -72,19 +77,16 @@ export default function user(state = initialState, action) {
       };
 
     case 'SIGN_IN': {
-      if (!action.payload.avatar) {
-        const obj = action.payload;
-        obj.avatar = av;
-        return {
-          ...state,
-          user: obj,
-        };
-      }
       return {
         ...state,
         user: action.payload,
       };
     }
+    case 'DELETE_USER':
+      return {
+        ...state,
+        user: {},
+      };
     default:
       return state;
   }

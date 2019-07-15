@@ -2,7 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { getUsers, getChats, postCreateChat } from '../../redux/actions';
+import { getUsers, getChats, postCreateChat } from '../../redux/queries';
 
 class CreateRoom extends React.Component {
   constructor() {

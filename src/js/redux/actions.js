@@ -1,4 +1,4 @@
-import history from '../../history';
+import io from 'socket.io-client';
 
 export const initSocketConnection = socket => ({
   type: 'INIT_SOCKET_CONNECTION',
@@ -8,11 +8,6 @@ export const initSocketConnection = socket => ({
 export const sendMessage = message => ({
   type: 'SEND_MESSAGE',
   payload: message,
-});
-
-export const createChat = chat => ({
-  type: 'CREATE_CHAT',
-  payload: chat,
 });
 
 export const reduxSignIn = user => ({
@@ -27,83 +22,64 @@ export const chatsUpdated = chats => ({
   type: 'CHATS_UPDATED',
   payload: chats,
 });
+export const addChatAction = chat => ({
+  type: 'ADD_CHAT',
+  payload: chat,
+});
 export const saveMessages = obj => ({
   type: 'SAVE_MESSAGES',
   payload: obj,
 });
+export const setActiveId = id => ({
+  type: 'SET_ACTIVE_ID',
+  payload: id,
+});
+export const createChat = chat => ({
+  type: 'CREATE_CHAT',
+  payload: chat,
+});
+export const logOutAction = () => ({
+  type: 'DELETE_USER',
+});
+export const closeSocket = () => (dispatch, getState) => {
+  getState().client.disconnect();
+  return dispatch(initSocketConnection(null));
+};
+export const createSocket = uniqueId => dispatch => {
+  const client = io(`http://localhost:8080`);
+  client.on('connect', () => {
+    console.log('client connected, listening...');
+    client.emit('uniqueId', uniqueId);
+  });
+  client.on('clientsUpdated', usersInfo => {
+    console.log('clients updated');
+    dispatch(clientsUpdated(usersInfo));
+  });
+  client.on('chatsUpdated', chatsInfo => {
+    console.log('chats updated');
+    dispatch(chatsUpdated(chatsInfo));
+  });
+  client.on('reply', (data, sender, roomId) => {
+    dispatch(sendMessage({ tweet: data, id: roomId, Sender: sender }));
+  });
+  client.on('disconnect', () => {
+    console.log('Client socket disconnect. ');
+    dispatch(logOutAction());
+  });
+  client.on('error', err => {
+    console.error(JSON.stringify(err));
+  });
+  client.on('chatInvite', chat => {
+    console.log('New chat!');
+    dispatch(createChat(chat));
+  });
+  return dispatch(initSocketConnection(client));
+};
 
 export const setEmit = (event, ...args) => (dispatch, getState) => {
   const { client } = getState();
   const sock = client;
+  console.log('emited');
   sock.emit(event, ...args);
-  dispatch(initSocketConnection(sock));
-};
-
-export const getChats = id => dispatch => {
-  fetch(`http://localhost:8080/api/chatsList/userId${id}`, {
-    method: 'GET',
-  })
-    .then(res => res.json())
-    .then(rooms => {
-      dispatch(chatsUpdated(rooms));
-    });
-};
-
-export const getUsers = () => dispatch => {
-  fetch('http://localhost:8080/api/usersList', {
-    method: 'GET',
-  })
-    .then(res => res.json())
-    .then(users => {
-      dispatch(clientsUpdated(users));
-    });
-};
-
-export const getChat = id => dispatch => {
-  fetch(`http://localhost:8080/api/messages/id${id}`, {
-    method: 'GET',
-  })
-    .then(res => res.json())
-    .then(messages => {
-      dispatch(saveMessages({ messages, id }));
-    });
-};
-
-export const postCreateChat = obj => dispatch => {
-  fetch('http://localhost:8080/createChat', {
-    method: 'POST',
-    body: JSON.stringify(obj),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-    .then(res => res.json())
-    .then(data => {
-      console.log(data);
-      console.log('Chat created!');
-      dispatch(createChat(data));
-    })
-    .catch(error => {
-      console.log('error', error);
-    });
-};
-
-export const postLogin = obj => dispatch => {
-  fetch('http://localhost:8080/login', {
-    method: 'POST',
-    body: JSON.stringify(obj),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-    .then(res => res.json())
-    .then(data => {
-      console.log(data);
-      dispatch(reduxSignIn(data));
-      localStorage.setItem('email', data.email);
-      localStorage.setItem('id', data.id);
-      localStorage.setItem('uniqueId', data.uniqueId);
-      localStorage.setItem('avatar', data.avatar);
-      history.push('/messanger');
-    });
+  return dispatch(initSocketConnection(sock));
 };

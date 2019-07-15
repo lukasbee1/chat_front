@@ -14,9 +14,9 @@ class InputItem extends Component {
 
   sendMessage = () => {
     const { inpData } = this.state;
-    const { roomId, user } = this.props;
+    const { activeId, user } = this.props;
     if (inpData !== '') {
-      this.props.setEmit('reply', inpData, user, roomId);
+      this.props.setEmit('reply', inpData, user, activeId);
       this.setState({ inpData: '' });
     }
   };
@@ -57,9 +57,8 @@ class InputItem extends Component {
   }
 }
 const mapStateToProps = state => ({
-  client: state.client,
   user: state.user,
-  chats: state.chats,
+  activeId: state.activeId,
 });
 
 export default connect(

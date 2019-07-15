@@ -3,7 +3,8 @@
 /* eslint-disable no-underscore-dangle */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { reduxSignIn, postLogin } from '../redux/actions';
+import { reduxSignIn } from '../redux/actions';
+import { postLogin } from '../redux/queries';
 
 // import { BrowserRouter as Link } from 'react-router-dom';
 import '../../css/Login.css';
@@ -11,6 +12,7 @@ import '../../css/Login.css';
 class Login extends Component {
   state = {
     email: '',
+    password: '',
   };
 
   componentDidMount() {
@@ -29,11 +31,17 @@ class Login extends Component {
     });
   }
 
-  sendDataOnServer = obj => {
-    // this.props.reduxSignIn(obj);
+  onLoginPress() {
+    const obj = {
+      type: 'profile',
+      email: this.state.email,
+      login: this.state.email,
+      name: this.state.email,
+      password: this.state.password,
+    };
     this.props.postLogin(obj);
-    // this.props.history.push('/messanger');
-  };
+    this.setState({ email: '', password: '' });
+  }
 
   googleSignIn = () => {
     const auth2 = window.gapi.auth2.getAuthInstance();
@@ -51,7 +59,7 @@ class Login extends Component {
         return obj;
       })
       .then(data => {
-        this.sendDataOnServer(data);
+        this.onLoginPress(data);
       });
   };
 
@@ -62,23 +70,10 @@ class Login extends Component {
     });
   };
 
-  handleSubmit = () => {
-    this.setState({ email: '' });
-    const obj = {
-      type: 'profile',
-      email: this.state.email,
-      login: this.state.email,
-      name: this.state.email,
-    };
-    if (obj.email) {
-      this.sendDataOnServer(obj);
-    }
-  };
-
   handleKeyPress = event => {
     if (event.key === 'Enter') {
       event.preventDefault();
-      this.handleSubmit();
+      this.onLoginPress();
     }
   };
 
@@ -145,7 +140,7 @@ class Login extends Component {
                     <button
                       className="btn btn-lg btn-primary btn-block text-uppercase"
                       type="submit"
-                      onClick={this.handleSubmit}
+                      onClick={this.onLoginPress}
                     >
                       Sign in
                     </button>

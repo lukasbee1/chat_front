@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 import CreateRoom from '../modals/CreateRoom';
 import Contact from './contactItem/Contact';
-import { getUsers, getChats } from '../../redux/actions';
+import { getUsers, getChats } from '../../redux/queries';
 
 class SidePanel extends React.Component {
   constructor() {
@@ -41,7 +41,9 @@ class SidePanel extends React.Component {
           <div className="messanger__sidepanel-profile">
             <img
               id="profile-img"
-              src={this.props.user.avatar}
+              src={`${process.env.REACT_APP_routeToStaticData}${
+                this.props.user.avatar
+              }`}
               className="online"
               alt=""
             />
@@ -54,7 +56,6 @@ class SidePanel extends React.Component {
               <NavLink
                 onClick={() => {
                   this.toggle('1');
-                  console.log('tr');
                   this.props.getUsers();
                 }}
               >
