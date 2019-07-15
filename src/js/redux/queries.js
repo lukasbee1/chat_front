@@ -81,7 +81,6 @@ export const postRegister = obj => dispatch => {
   })
     .then(res => res.json())
     .then(data => {
-      console.log(data);
       if (!data.error) {
         localStorage.setItem('email', data.email);
         localStorage.setItem('id', data.id);
@@ -98,8 +97,6 @@ export const postRegister = obj => dispatch => {
     });
 };
 export const postLogin = obj => dispatch => {
-  console.log('login!!!');
-
   fetch(`http://localhost:8080/login`, {
     method: 'POST',
     body: JSON.stringify(obj),
@@ -109,14 +106,12 @@ export const postLogin = obj => dispatch => {
   })
     .then(res => res.json())
     .then(data => {
-      console.log(data);
       if (!data.error) {
         localStorage.setItem('email', data.email);
         localStorage.setItem('id', data.id);
         localStorage.setItem('uniqueId', data.uniqueId);
         localStorage.setItem('avatar', data.avatar);
         history.push('/messanger');
-        console.log('success!!!');
         return dispatch(reduxSignIn(data));
       }
       return data.error;
