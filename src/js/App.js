@@ -3,6 +3,7 @@ import { Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import MainPage from './components/MainPage';
 import Login from './components/Login';
+import Register from './components/Register';
 import '../css/App.css';
 import history from '../history';
 
@@ -11,6 +12,7 @@ class App extends React.PureComponent {
     return (
       <Router history={history}>
         <Route exact path="/" component={Login} />
+        <Route exact path="/register" component={Register} />
         <Route path="/messanger" component={MainPage} />
       </Router>
     );

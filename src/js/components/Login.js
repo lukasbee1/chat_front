@@ -11,7 +11,7 @@ import '../../css/Login.css';
 
 class Login extends Component {
   state = {
-    email: '',
+    login: '',
     password: '',
   };
 
@@ -31,17 +31,14 @@ class Login extends Component {
     });
   }
 
-  onLoginPress() {
+  onLoginPress = () => {
     const obj = {
-      type: 'profile',
-      email: this.state.email,
-      login: this.state.email,
-      name: this.state.email,
+      login: this.state.login,
       password: this.state.password,
     };
     this.props.postLogin(obj);
-    this.setState({ email: '', password: '' });
-  }
+    this.setState({ login: '', password: '' });
+  };
 
   googleSignIn = () => {
     const auth2 = window.gapi.auth2.getAuthInstance();
@@ -78,11 +75,15 @@ class Login extends Component {
   };
 
   handleInputChange = e => {
-    this.setState({ email: e.target.value });
+    this.setState({ login: e.target.value });
+  };
+
+  handleInputChangePassword = e => {
+    this.setState({ password: e.target.value });
   };
 
   render() {
-    const { email } = this.state;
+    const { login, password } = this.state;
     if (localStorage.getItem('uniqueId')) {
       this.props.user.email = localStorage.getItem('email');
       this.props.user.id = localStorage.getItem('id');
@@ -101,24 +102,26 @@ class Login extends Component {
                   <form className="form-signin">
                     <div className="form-label-group">
                       <input
-                        type="email"
-                        id="inputEmail"
-                        value={email}
+                        id="inputLogin"
+                        value={login}
                         className="form-control"
-                        placeholder="Email address"
+                        placeholder="Login"
                         required
                         onChange={this.handleInputChange}
                         onKeyPress={this.handleKeyPress}
                       />
-                      <label htmlFor="inputEmail">Email address</label>
+                      <label htmlFor="inputLogin">Login</label>
                     </div>
 
                     <div className="form-label-group">
                       <input
                         id="inputPassword"
                         type="password"
+                        value={password}
                         className="form-control"
                         placeholder="Password"
+                        onChange={this.handleInputChangePassword}
+                        onKeyPress={this.handleKeyPress}
                         required
                       />
                       <label htmlFor="inputPassword">Password</label>
@@ -143,6 +146,15 @@ class Login extends Component {
                       onClick={this.onLoginPress}
                     >
                       Sign in
+                    </button>
+                    <button
+                      className="btn btn-lg btn-primary btn-block text-uppercase"
+                      type="submit"
+                      onClick={() => {
+                        this.props.history.push('/register');
+                      }}
+                    >
+                      Sign Up
                     </button>
                     <hr className="my-4" />
                     <button
