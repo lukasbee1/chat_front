@@ -6,7 +6,7 @@ class Contact extends PureComponent {
     return (
       <Link
         to={`/messanger/id${this.props.det}`}
-        // onClick={() => this.setActiveId(this.props.det)}
+        onClick={() => this.props.getM(this.props.det)}
         key={this.props.det}
         className="messanger__constacts-contact"
       >

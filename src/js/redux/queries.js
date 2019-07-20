@@ -68,6 +68,7 @@ export const postCreateChat = obj => dispatch => {
       console.log('error', error);
     });
 };
+
 export const postRegister = obj => dispatch => {
   if (!obj.avatar) {
     obj.avatar = 'img/download.jpeg';

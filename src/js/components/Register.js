@@ -139,6 +139,13 @@ class Login extends Component {
                     >
                       Sign Up
                     </button>
+                    <button
+                      className="btn btn-lg btn-primary btn-block text-uppercase"
+                      type="submit"
+                      onClick={() => this.props.history.push('/messanger')}
+                    >
+                      Back
+                    </button>
                     <hr className="my-4" />
                   </form>
                 </div>

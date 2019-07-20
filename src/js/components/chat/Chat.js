@@ -23,7 +23,7 @@ class Chat extends React.PureComponent {
   componentDidMount() {
     this.setId();
   }
-
+  componentWillUpdate(prevProps) {}
   setId() {
     const { pathname } = this.props.location;
     this.props.getMessages(+pathname.toString().match(regexp)[0]);

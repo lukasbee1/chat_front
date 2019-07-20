@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 import CreateRoom from '../modals/CreateRoom';
 import Contact from './contactItem/Contact';
-import { getUsers, getChats } from '../../redux/queries';
+import { getUsers, getChats, getMessages } from '../../redux/queries';
 
 class SidePanel extends React.Component {
   constructor() {
@@ -28,7 +28,12 @@ class SidePanel extends React.Component {
 
   render() {
     const arrayOfChats = this.props.chatsList.map(chat => (
-      <Contact det={chat.id} chN={chat.name} key={chat.id} />
+      <Contact
+        det={chat.id}
+        chN={chat.name}
+        key={chat.id}
+        getM={this.props.getMessages}
+      />
     ));
     const arrayOfUsers = this.props.usersList.map(user => (
       // <Contact det={user.id} chN={user.name} key={user.id} />
@@ -98,5 +103,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getUsers, getChats }
+  { getUsers, getChats, getMessages }
 )(SidePanel);

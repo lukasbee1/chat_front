@@ -14,10 +14,29 @@ class CreateRoom extends React.Component {
     };
   }
 
-  selectUser = id => {
+  handleCreatePress = () => {
+    const { name, selectedUsers } = this.state;
+    this.props.postCreateChat({
+      name,
+      users: [this.props.user, ...selectedUsers],
+    });
+    this.props.getChats(this.props.user.id);
+    this.closeModal();
+  };
+
+  handleUserPress = user => {
     const { selectedUsers } = this.state;
-    this.setState({ selectedUsers: [...selectedUsers, id] });
-    console.log('selected');
+    if (selectedUsers.includes(user)) {
+      this.setState({
+        selectedUsers: selectedUsers.filter(
+          item => item.uniqueId !== user.uniqueId
+        ),
+      });
+    } else {
+      const newArray = selectedUsers;
+      newArray.push(user);
+      this.setState({ selectedUsers: newArray });
+    }
   };
 
   closeModal = () => {
@@ -28,17 +47,6 @@ class CreateRoom extends React.Component {
     this.setState({ modalIsOpen: true });
   };
 
-  createChat = () => {
-    const { name, selectedUsers } = this.state;
-    const obj = {
-      name,
-      usersId: selectedUsers,
-    };
-    this.props.postCreateChat(obj);
-    this.props.getChats(this.props.user.id);
-    this.closeModal();
-  };
-
   handleInputChange = e => {
     this.setState({ name: e.target.value });
   };
@@ -46,14 +54,18 @@ class CreateRoom extends React.Component {
   render() {
     const listComp = this.props.usersList.map(user => (
       <button
-        onClick={() => this.selectUser(user.id)}
+        onClick={() => this.handleUserPress(user)}
         key={user.id}
-        className="modal-usersList"
+        className="modal-usersList modal-usersList__component"
       >
-        <img src={user.avatar} alt="ava" />
-        <div>{user.name}</div>
+        <img
+          src={`${process.env.REACT_APP_routeToStaticData}${user.avatar}`}
+          alt="ava"
+        />
+        <div className="modal-usersList__component-text">{user.name}</div>
       </button>
     ));
+
     return (
       <>
         <button
@@ -81,7 +93,7 @@ class CreateRoom extends React.Component {
           <ModalFooter>
             <Button
               color="primary"
-              onClick={() => this.createChat(this.state.selectedUsers)}
+              onClick={() => this.handleCreatePress(this.state.selectedUsers)}
             >
               Create
             </Button>

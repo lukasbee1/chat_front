@@ -173,3 +173,11 @@ img {
   background: #2c3e50;
   width: 100%;
 }
+.modal-usersList__component {
+  display: flex;
+}
+.modal-usersList__component-text {
+  font-size: 24px;
+  color: white;
+  margin: auto 30px;
+}
