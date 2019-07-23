@@ -11,17 +11,23 @@ class CreateRoom extends React.Component {
       modalIsOpen: false,
       selectedUsers: [],
       name: '',
+      visable: false,
     };
   }
 
   handleCreatePress = () => {
     const { name, selectedUsers } = this.state;
-    this.props.postCreateChat({
-      name,
-      users: [this.props.user, ...selectedUsers],
-    });
-    // this.props.getChats(this.props.user.id);
-    this.closeModal();
+    if (name && selectedUsers.length) {
+      this.props.postCreateChat({
+        name,
+        users: [this.props.user, ...selectedUsers],
+      });
+      // this.props.getChats(this.props.user.id);
+      this.setState({ name: '', selectedUsers: [] });
+      this.closeModal();
+    } else {
+      this.setState({ visable: true });
+    }
   };
 
   handleUserPress = user => {
@@ -69,6 +75,7 @@ class CreateRoom extends React.Component {
       </button>
     ));
 
+    const clVis = this.state.visable ? 'vis' : 'unvis';
     return (
       <>
         <button
@@ -85,6 +92,7 @@ class CreateRoom extends React.Component {
         >
           <ModalHeader>Modal title</ModalHeader>
           <ModalBody>
+            <div className={clVis}>select users and enter chat name</div>
             <form>
               <input
                 onChange={this.handleInputChange}

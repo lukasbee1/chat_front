@@ -29,24 +29,28 @@ export default function user(state = initialState, action) {
         activeId: action.payload,
       };
     case 'SEND_MESSAGE':
+      console.log(action.payload);
       return {
         ...state,
         chats: {
           ...state.chats,
-          [action.payload.id]: [
-            ...state.chats[action.payload.id],
+          [action.payload.roomId]: [
+            ...state.chats[action.payload.roomId],
             action.payload,
           ],
         },
       };
     case 'SAVE_MESSAGES': {
-      return {
-        ...state,
-        chats: {
-          ...state.chats,
-          [action.payload.id]: action.payload.messages,
-        },
-      };
+      if (action.payload[0]) {
+        return {
+          ...state,
+          chats: {
+            ...state.chats,
+            [action.payload[0].roomId]: action.payload,
+          },
+        };
+      }
+      return { ...state };
     }
     case 'CLIENTS_UPDATED':
       return {

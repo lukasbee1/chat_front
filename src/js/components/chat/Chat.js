@@ -15,52 +15,36 @@ import {
 import InputItem from './InputItem/InputItem';
 import Message from './MessageItem/Message';
 
-const regexp = /[0-9]/;
+const regexp = /[0-9]+/g;
 
-class Chat extends React.Component {
-  state = {
-    currChat: [],
-  };
-
+class Chat extends React.PureComponent {
   componentDidMount() {
     this.setId();
-    console.log(this.props.chatsList);
   }
 
   setId() {
     const { pathname } = this.props.location;
     this.props.getMessages(+pathname.toString().match(regexp)[0]);
     // this.props.setEmit('activeChat', +pathname.toString().match(regexp)[0]);
-
-    this.setState({
-      currChat: this.props.chatsList.filter(
-        item => item.id === +pathname.toString().match(regexp)[0]
-      )[0],
-    });
-    console.log(
-      this.props.chatsList.filter(
-        item => item.id === +pathname.toString().match(regexp)[0]
-      )
-    );
   }
 
   render() {
-    console.log(this.state.currChat);
-    const { activeId, chats } = this.props;
-    // const ava = this.props.getChatInfo(+pathname.toString().match(regexp)[0]).avatar;
+    const { pathname } = this.props.location;
+    const { activeId, chats, user, chatsList } = this.props;
+    const currChat = chatsList.filter(
+      item => item.id === +pathname.toString().match(regexp)[0]
+    )[0];
     return (
       <>
         <div className="messanger__content-profile">
           <img
             src={`${process.env.REACT_APP_routeToStaticData}${
-              this.state.currChat ? this.state.currChat.avatar : null
+              currChat ? currChat.avatar : null
             }`}
             alt="avatar"
             className="messanger__content-profile_img"
           />
-          <div className="my-auto">
-            {this.state.currChat ? this.state.currChat.name : 'undef'}
-          </div>
+          <div className="my-auto">{currChat ? currChat.name : 'undef'}</div>
         </div>
         <div className="messanger__content-chat">
           <div className="messanger__content-messageBlock">
@@ -69,12 +53,13 @@ class Chat extends React.Component {
                   <Message
                     key={message.id}
                     details={message.tweet}
-                    sender={message.Sender}
+                    sender={message.sender}
+                    uniqueId={user.uniqueId}
                   />
                 ))
               : null}
           </div>
-          <InputItem roomId={this.props.activeId} />
+          <InputItem />
         </div>
       </>
     );

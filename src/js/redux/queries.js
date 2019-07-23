@@ -40,7 +40,9 @@ export const getMessages = id => dispatch => {
   })
     .then(res => res.json())
     .then(messages => {
-      dispatch(saveMessages({ messages, id }));
+      if (messages !== []) {
+        dispatch(saveMessages(messages));
+      }
       dispatch(setActiveId(id));
       dispatch(setEmit('activeChat', id));
     })
@@ -61,9 +63,8 @@ export const postCreateChat = obj => dispatch => {
   })
     .then(res => res.json())
     .then(chat => {
-      // dispatch(createChat(chat));
-      dispatch(getMessages(chat.id));
       dispatch(setEmit('chatInvite', chat));
+      dispatch(getMessages(chat.id));
       history.push(`/messanger/id${chat.id}`);
     })
     .catch(error => {

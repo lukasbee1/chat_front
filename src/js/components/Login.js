@@ -86,7 +86,7 @@ class Login extends Component {
     const { login, password } = this.state;
     if (localStorage.getItem('uniqueId')) {
       this.props.user.email = localStorage.getItem('email');
-      this.props.user.id = localStorage.getItem('id');
+      this.props.user.id = +localStorage.getItem('id');
       this.props.user.uniqueId = localStorage.getItem('uniqueId');
       this.props.user.avatar = localStorage.getItem('avatar');
       this.props.history.push('/messanger');

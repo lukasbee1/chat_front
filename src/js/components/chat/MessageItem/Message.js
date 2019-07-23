@@ -3,11 +3,18 @@ import { connect } from 'react-redux';
 
 class Message extends PureComponent {
   render() {
+    console.log(this.props.sender);
+    console.log(this.props.user.id);
+
+    const whoSend =
+      this.props.sender.uniqueId === this.props.user.uniqueId
+        ? 'senderMess'
+        : 'defaultMess';
     return (
-      <div className="messanger__content-messageBlock_message">
+      <div className={`messanger__content-messageBlock_message ${whoSend}`}>
         <img
           src={`${process.env.REACT_APP_routeToStaticData}${
-            this.props.user.avatar
+            this.props.sender.avatar
           }`}
           className="messanger__content-messageBlock_message-img"
           alt="avatar"
@@ -20,9 +27,7 @@ class Message extends PureComponent {
   }
 }
 const mapStateToProps = state => ({
-  client: state.client,
   user: state.user,
-  chats: state.chats,
 });
 
 export default connect(
