@@ -4,7 +4,6 @@ import {
   clientsUpdated,
   saveMessages,
   setActiveId,
-  createChat,
   reduxSignIn,
   setEmit,
 } from './actions';
@@ -14,9 +13,7 @@ export const getChats = id => dispatch => {
     method: 'GET',
   })
     .then(res => res.json())
-    .then(rooms => {
-      dispatch(chatsUpdated(rooms));
-    })
+    .then(rooms => dispatch(chatsUpdated(rooms)))
     .catch(error => {
       console.log('Api call error, getChats');
       alert(error.message);
@@ -52,6 +49,9 @@ export const getMessages = id => dispatch => {
     });
 };
 export const postCreateChat = obj => dispatch => {
+  if (!obj.avatar) {
+    obj.avatar = 'img/group.png';
+  }
   return fetch(`http://localhost:8080/createChat`, {
     method: 'POST',
     body: JSON.stringify(obj),
@@ -61,8 +61,10 @@ export const postCreateChat = obj => dispatch => {
   })
     .then(res => res.json())
     .then(chat => {
-      dispatch(createChat(chat));
+      // dispatch(createChat(chat));
       dispatch(getMessages(chat.id));
+      dispatch(setEmit('chatInvite', chat));
+      history.push(`/messanger/id${chat.id}`);
     })
     .catch(error => {
       console.log('error', error);

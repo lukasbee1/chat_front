@@ -20,7 +20,7 @@ class CreateRoom extends React.Component {
       name,
       users: [this.props.user, ...selectedUsers],
     });
-    this.props.getChats(this.props.user.id);
+    // this.props.getChats(this.props.user.id);
     this.closeModal();
   };
 
@@ -52,7 +52,10 @@ class CreateRoom extends React.Component {
   };
 
   render() {
-    const listComp = this.props.usersList.map(user => (
+    const list = this.props.usersList.filter(
+      user => user.uniqueId !== this.props.user.uniqueId
+    );
+    const listComp = list.map(user => (
       <button
         onClick={() => this.handleUserPress(user)}
         key={user.id}

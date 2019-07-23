@@ -79,7 +79,6 @@ export const createSocket = uniqueId => dispatch => {
 export const setEmit = (event, ...args) => (dispatch, getState) => {
   const { client } = getState();
   const sock = client;
-  console.log('emited');
   sock.emit(event, ...args);
   return dispatch(initSocketConnection(sock));
 };

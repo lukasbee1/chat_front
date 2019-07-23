@@ -13,34 +13,54 @@ import {
   setEmit,
 } from '../../redux/actions';
 import InputItem from './InputItem/InputItem';
-// import DialogNotSelected from './MessageItem/DialogNotSelected';
-
 import Message from './MessageItem/Message';
 
-const regexp = /[0-9]/g;
+const regexp = /[0-9]/;
 
-class Chat extends React.PureComponent {
+class Chat extends React.Component {
+  state = {
+    currChat: [],
+  };
+
   componentDidMount() {
     this.setId();
+    console.log(this.props.chatsList);
   }
-  componentWillUpdate(prevProps) {}
+
   setId() {
     const { pathname } = this.props.location;
     this.props.getMessages(+pathname.toString().match(regexp)[0]);
     // this.props.setEmit('activeChat', +pathname.toString().match(regexp)[0]);
+
+    this.setState({
+      currChat: this.props.chatsList.filter(
+        item => item.id === +pathname.toString().match(regexp)[0]
+      )[0],
+    });
+    console.log(
+      this.props.chatsList.filter(
+        item => item.id === +pathname.toString().match(regexp)[0]
+      )
+    );
   }
 
   render() {
+    console.log(this.state.currChat);
     const { activeId, chats } = this.props;
+    // const ava = this.props.getChatInfo(+pathname.toString().match(regexp)[0]).avatar;
     return (
       <>
         <div className="messanger__content-profile">
           <img
-            src="http://emilcarlsson.se/assets/harveyspecter.png"
+            src={`${process.env.REACT_APP_routeToStaticData}${
+              this.state.currChat ? this.state.currChat.avatar : null
+            }`}
             alt="avatar"
             className="messanger__content-profile_img"
           />
-          <div className="my-auto">Harvey Specter</div>
+          <div className="my-auto">
+            {this.state.currChat ? this.state.currChat.name : 'undef'}
+          </div>
         </div>
         <div className="messanger__content-chat">
           <div className="messanger__content-messageBlock">
@@ -61,7 +81,9 @@ class Chat extends React.PureComponent {
   }
 }
 const mapStateToProps = state => ({
+  user: state.user,
   chats: state.chats,
+  chatsList: state.chatsList,
   activeId: state.activeId,
 });
 

@@ -44,7 +44,6 @@ class MainPage extends Component {
 }
 
 const mapStateToProps = state => ({
-  client: state.client,
   user: state.user,
 });
 

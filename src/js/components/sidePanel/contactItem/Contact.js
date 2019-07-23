@@ -12,7 +12,10 @@ class Contact extends PureComponent {
       >
         <div className="messanger__constacts-contact_avatar">
           <span className="contact-status online" />
-          <img src="http://emilcarlsson.se/assets/mikeross.png" alt="" />
+          <img
+            src={`${process.env.REACT_APP_routeToStaticData}${this.props.ava}`}
+            alt=""
+          />
         </div>
         <div className="messanger__constacts-contact_meta">
           <div className="messanger__constacts-contact_meta-link">
