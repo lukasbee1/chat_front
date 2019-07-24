@@ -54,7 +54,6 @@ class Chat extends React.PureComponent {
                     key={message.id}
                     details={message.tweet}
                     sender={message.sender}
-                    uniqueId={user.uniqueId}
                   />
                 ))
               : null}

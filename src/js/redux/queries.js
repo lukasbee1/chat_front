@@ -6,6 +6,7 @@ import {
   setActiveId,
   reduxSignIn,
   setEmit,
+  createChat,
 } from './actions';
 
 export const getChats = id => dispatch => {
@@ -63,15 +64,13 @@ export const postCreateChat = obj => dispatch => {
   })
     .then(res => res.json())
     .then(chat => {
-      dispatch(setEmit('chatInvite', chat));
+      dispatch(createChat(chat));
       dispatch(getMessages(chat.id));
-      history.push(`/messanger/id${chat.id}`);
     })
     .catch(error => {
       console.log('error', error);
     });
 };
-
 export const postRegister = obj => dispatch => {
   if (!obj.avatar) {
     obj.avatar = 'img/download.jpeg';

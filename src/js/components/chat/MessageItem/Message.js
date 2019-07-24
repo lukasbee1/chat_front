@@ -3,9 +3,6 @@ import { connect } from 'react-redux';
 
 class Message extends PureComponent {
   render() {
-    console.log(this.props.sender);
-    console.log(this.props.user.id);
-
     const whoSend =
       this.props.sender.uniqueId === this.props.user.uniqueId
         ? 'senderMess'

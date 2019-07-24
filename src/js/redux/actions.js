@@ -5,9 +5,9 @@ export const initSocketConnection = socket => ({
   payload: socket,
 });
 
-export const sendMessage = message => ({
+export const sendMessage = obj => ({
   type: 'SEND_MESSAGE',
-  payload: message,
+  payload: obj,
 });
 
 export const reduxSignIn = user => ({
@@ -63,9 +63,7 @@ export const createSocket = uniqueId => dispatch => {
   //   dispatch(sendMessage({ tweet: data, id: roomId, Sender: sender }));
   // });
   client.on('reply', obj => {
-    console.log(obj);
-    console.log('here');
-
+    // console.log(obj);
     dispatch(sendMessage(obj));
   });
   client.on('disconnect', () => {
