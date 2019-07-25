@@ -50,6 +50,7 @@ export const createSocket = uniqueId => dispatch => {
   client.on('connect', () => {
     console.log('client connected, listening...');
     client.emit('uniqueId', uniqueId);
+    dispatch(createChat({ id: 2, name: 'common', avatar: 'img/group.png' }));
   });
   client.on('clientsUpdated', usersInfo => {
     console.log('clients updated');
@@ -75,6 +76,7 @@ export const createSocket = uniqueId => dispatch => {
   });
   client.on('chatInvite', chat => {
     console.log('New chat!');
+    console.log(chat);
     dispatch(createChat(chat));
   });
   return dispatch(initSocketConnection(client));
