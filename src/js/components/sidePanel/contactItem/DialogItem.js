@@ -1,9 +1,15 @@
 import React, { PureComponent } from 'react';
+import { Link } from 'react-router-dom';
 
-class Contact extends PureComponent {
+class DialogItem extends PureComponent {
   render() {
     return (
-      <div className="messanger__constacts-contact">
+      <Link
+        to={`/messanger/id${this.props.det}`}
+        onClick={() => this.props.getM(this.props.det)}
+        key={this.props.det}
+        className="messanger__constacts-contact"
+      >
         <div className="messanger__constacts-contact_avatar">
           <span className="contact-status online" />
           <img
@@ -13,13 +19,15 @@ class Contact extends PureComponent {
         </div>
         <div className="messanger__constacts-contact_meta">
           <div className="messanger__constacts-contact_meta-link">
-            {this.props.name}
+            {this.props.chN}
           </div>
-          <div className="messanger__constacts-contact_meta-preview" />
+          <div className="messanger__constacts-contact_meta-preview">
+            last message
+          </div>
         </div>
-      </div>
+      </Link>
     );
   }
 }
 
-export default Contact;
+export default DialogItem;

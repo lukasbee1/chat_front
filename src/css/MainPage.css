@@ -23,6 +23,9 @@ img {
   display: flex;
   flex-direction: row;
 }
+.modal-usersList .selectedUser {
+  background-color: #a0e0e0;
+}
 .messanger {
   display: flex;
   justify-content: center;

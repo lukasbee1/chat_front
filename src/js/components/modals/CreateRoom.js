@@ -42,6 +42,7 @@ class CreateRoom extends React.Component {
       const newArray = selectedUsers;
       newArray.push(user);
       this.setState({ selectedUsers: newArray });
+      // con.className = 'selectedUser';
     }
   };
 
@@ -61,21 +62,27 @@ class CreateRoom extends React.Component {
     const list = this.props.usersList.filter(
       user => user.uniqueId !== this.props.user.uniqueId
     );
-    const listComp = list.map(user => (
-      <button
-        onClick={() => this.handleUserPress(user)}
-        key={user.id}
-        className="modal-usersList modal-usersList__component"
-      >
-        <img
-          src={`${process.env.REACT_APP_routeToStaticData}${user.avatar}`}
-          alt="ava"
-        />
-        <div className="modal-usersList__component-text">{user.name}</div>
-      </button>
-    ));
+    const listComp = list.map(user => {
+      const userCl = this.state.selectedUsers.includes(user)
+        ? 'selectedUser'
+        : '';
+      return (
+        <button
+          onClick={() => this.handleUserPress(user)}
+          key={user.id}
+          className={`modal-usersList modal-usersList__component ${userCl}`}
+        >
+          <img
+            src={`${process.env.REACT_APP_routeToStaticData}${user.avatar}`}
+            alt="ava"
+          />
+          <div className="modal-usersList__component-text">{user.name}</div>
+        </button>
+      );
+    });
 
     const clVis = this.state.visable ? 'vis' : 'unvis';
+
     return (
       <>
         <button
@@ -90,7 +97,7 @@ class CreateRoom extends React.Component {
           onAfterOpen={this.afterOpenModal}
           onRequestClose={this.closeModal}
         >
-          <ModalHeader>Modal title</ModalHeader>
+          <ModalHeader>Create chat</ModalHeader>
           <ModalBody>
             <div className={clVis}>select users and enter chat name</div>
             <form>
@@ -113,10 +120,6 @@ class CreateRoom extends React.Component {
             </Button>
           </ModalFooter>
         </Modal>
-        <button className="messanger__sidepanel-bottomBar_settings">
-          <i className="fa fa-cog fa-fw" aria-hidden="true" />
-          <span> Settings</span>
-        </button>
       </>
     );
   }

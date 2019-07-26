@@ -1,9 +1,14 @@
+/* eslint-disable react/button-has-type */
+
 import React from 'react';
 import { connect } from 'react-redux';
 import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
+import history from '../../../history';
 import CreateRoom from '../modals/CreateRoom';
 import Contact from './contactItem/Contact';
+import DialogItem from './contactItem/DialogItem';
 import { getUsers, getChats, getMessages } from '../../redux/queries';
+import { logOut } from '../../redux/actions';
 
 class SidePanel extends React.Component {
   constructor() {
@@ -28,7 +33,7 @@ class SidePanel extends React.Component {
 
   render() {
     const arrayOfChats = this.props.chatsList.map(chat => (
-      <Contact
+      <DialogItem
         ava={chat.avatar}
         det={chat.id}
         chN={chat.name}
@@ -37,8 +42,7 @@ class SidePanel extends React.Component {
       />
     ));
     const arrayOfUsers = this.props.usersList.map(user => (
-      // <Contact det={user.id} chN={user.name} key={user.id} />
-      <div key={user.id}>{user.name}</div>
+      <Contact ava={user.avatar} name={user.name} key={user.id} />
     ));
 
     return (
@@ -90,6 +94,16 @@ class SidePanel extends React.Component {
         </div>
         <div className="messanger__sidepanel-bottomBar">
           <CreateRoom />
+          <button
+            className="messanger__sidepanel-bottomBar_settings"
+            onClick={() => {
+              history.push('/');
+              this.props.logOut();
+            }}
+          >
+            <i className="fa fa-cog fa-fw" aria-hidden="true" />
+            <span> Log Out</span>
+          </button>
         </div>
       </div>
     );
@@ -104,5 +118,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getUsers, getChats, getMessages }
+  { getUsers, getChats, getMessages, logOut }
 )(SidePanel);
