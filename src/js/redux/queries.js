@@ -6,6 +6,7 @@ import {
   setActiveId,
   reduxSignIn,
   setEmit,
+  createChat,
 } from './actions';
 
 export const getChats = id => dispatch => {
@@ -13,7 +14,18 @@ export const getChats = id => dispatch => {
     method: 'GET',
   })
     .then(res => res.json())
-    .then(rooms => dispatch(chatsUpdated(rooms)))
+    .then(rooms => {
+      dispatch(chatsUpdated(rooms));
+      rooms.forEach(element => {
+        dispatch(
+          createChat({
+            id: element.id,
+            name: element.name,
+            avatar: element.avatar,
+          })
+        );
+      });
+    })
     .catch(error => {
       console.log('Api call error, getChats');
       alert(error.message);
