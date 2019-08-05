@@ -21,6 +21,7 @@ class SidePanel extends React.Component {
   componentDidMount() {
     this.props.getUsers();
     this.props.getChats(this.props.user.id);
+    console.log('mount');
   }
 
   toggle = tab => {

@@ -50,7 +50,7 @@ export const createSocket = uniqueId => dispatch => {
   client.on('connect', () => {
     console.log('client connected, listening...');
     client.emit('uniqueId', uniqueId);
-    dispatch(createChat({ id: 1, name: 'common', avatar: 'img/group.png' }));
+    // dispatch(createChat({ id: 1, name: 'common', avatar: 'img/group.png' }));
   });
   client.on('clientsUpdated', usersInfo => {
     console.log('clients updated');

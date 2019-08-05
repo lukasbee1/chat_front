@@ -1,6 +1,5 @@
 import history from '../../history';
 import {
-  chatsUpdated,
   clientsUpdated,
   saveMessages,
   setActiveId,
@@ -15,7 +14,6 @@ export const getChats = id => dispatch => {
   })
     .then(res => res.json())
     .then(rooms => {
-      dispatch(chatsUpdated(rooms));
       rooms.forEach(element => {
         dispatch(
           createChat({
